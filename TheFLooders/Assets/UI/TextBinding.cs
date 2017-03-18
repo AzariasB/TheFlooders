@@ -5,31 +5,28 @@ using UnityEngine.UI;
 
 public class TextBinding : MonoBehaviour {
 
-    public int Count { get; set; }
-
-    private string _textContent;
+    public int Count;
 
     private Text _textObject;
 
-    public TextBinding(int Count, string textContent)
-    {
-        this.Count = Count;
-        this._textContent = textContent;
-    }
-
     public void BindText()
     {
-        _textObject.text = string.Format(_textContent, Count);
+        _textObject.text = Count.ToString();
     }
 
-    protected void ReduceCount()
+    public void Decrement()
     {
         Count--;
         BindText();
     }
 
+    public bool CanDecrement()
+    {
+        return Count > 0;
+    }
+
 	// Use this for initialization
-	void Start () {
+	public void Start () {
         _textObject = gameObject.GetComponent<Text>();
         BindText();
 	}

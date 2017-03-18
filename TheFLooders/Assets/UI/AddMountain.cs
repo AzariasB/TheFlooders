@@ -20,7 +20,7 @@ public class AddMountain : MonoBehaviour {
 
     void AddMountainTask()
     {
-        if( (GameObject.Find("mountain_text").GetComponent<MountainCount>() as MountainCount).CanPlaceMountain())
+        if( (GameObject.Find("mountain_text").GetComponent<TextBinding>() as TextBinding).CanDecrement())
         {
             GameObject nwObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
             nwObj.transform.position = new Vector3(0, 10, 0);

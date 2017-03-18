@@ -27,7 +27,7 @@ public class PlaceBridge : MonoBehaviour {
                 Placed = rayCast;
                 //Change layer
                 gameObject.layer = LayerMask.NameToLayer("Default");
-                (GameObject.Find("bridge_text").GetComponent<BridgeCount>() as BridgeCount).PlaceBridge();
+                (GameObject.Find("bridge_text").GetComponent<TextBinding>() as TextBinding).Decrement();
                 
             }
             else if (Input.GetMouseButtonDown(1))

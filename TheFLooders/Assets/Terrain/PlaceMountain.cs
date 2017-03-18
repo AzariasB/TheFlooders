@@ -31,7 +31,7 @@ public class PlaceMountain : MonoBehaviour {
                 Placed = rayCast;
                 //Change layer
                 gameObject.layer = LayerMask.NameToLayer("Default");
-                (GameObject.Find("mountain_text").GetComponent < MountainCount >() as MountainCount).PlaceMountain();
+                (GameObject.Find("mountain_text").GetComponent<TextBinding>() as TextBinding).Decrement();
 
                 //Decrement number of mountains
             }

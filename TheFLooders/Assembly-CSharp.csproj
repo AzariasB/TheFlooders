@@ -52,9 +52,7 @@
      <Compile Include="Assets\Terrain\TerrainHeightMap.cs" />
      <Compile Include="Assets\UI\AddBridge.cs" />
      <Compile Include="Assets\UI\AddMountain.cs" />
-     <Compile Include="Assets\UI\BridgeCount.cs" />
      <Compile Include="Assets\UI\Game.cs" />
-     <Compile Include="Assets\UI\MountainCount.cs" />
      <Compile Include="Assets\UI\TextBinding.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

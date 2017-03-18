@@ -20,7 +20,7 @@ public class AddBridge : MonoBehaviour {
     void AddBrigeTask()
     {
         //Check if remain enough bridges
-        if((GameObject.Find("bridge_text").GetComponent<BridgeCount>() as BridgeCount).CanPlaceBridge())
+        if((GameObject.Find("bridge_text").GetComponent<TextBinding>() as TextBinding).CanDecrement())
         {
             GameObject nwBrige = GameObject.CreatePrimitive(PrimitiveType.Plane);
             //Change size ...

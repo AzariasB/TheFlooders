@@ -28,6 +28,10 @@ public class AddClay : MonoBehaviour {
             nwObj.layer = LayerMask.NameToLayer("Ignore Raycast");
             nwObj.AddComponent<PlaceClay>();
 
+            //
+            Material mountainMaterial = Resources.Load("ArgileMaterial", typeof(Material)) as Material;
+            nwObj.GetComponent<Renderer>().material = mountainMaterial;
+
             //First destroy collider, to avoid pushing 
             Destroy(nwObj.GetComponent<Collider>());
 

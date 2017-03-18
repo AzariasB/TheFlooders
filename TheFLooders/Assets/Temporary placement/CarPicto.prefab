@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 64939912894745030}
   - component: {fileID: 23622931731432348}
   m_Layer: 0
-  m_Name: Quad
+  m_Name: CarPicto
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

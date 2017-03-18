@@ -32,9 +32,16 @@ public class AddBridge : MonoBehaviour {
 
             //Change size ...
             nwBrige.transform.localScale = bridgeSize;
+            
 
             nwBrige.layer = LayerMask.NameToLayer("Ignore Raycast");
             nwBrige.AddComponent<PlaceBridge>();
+
+            GameObject[] objects = GameObject.FindGameObjectsWithTag("ModifierButton");
+            foreach (GameObject obj in objects)
+            {
+                (obj.GetComponent<Button>() as Button).interactable = false;
+            }
         }
     }
 }

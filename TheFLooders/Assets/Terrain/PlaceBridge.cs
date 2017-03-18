@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlaceBridge : MonoBehaviour {
 
@@ -25,10 +26,20 @@ public class PlaceBridge : MonoBehaviour {
             if (Input.GetMouseButtonDown(0))
             {
                 Placed = rayCast;
-                //Change layer
-                gameObject.layer = LayerMask.NameToLayer("Default");
-                (GameObject.Find("bridge_text").GetComponent<TextBinding>() as TextBinding).Decrement();
-                
+                if (Placed)
+                {
+                    //Change layer
+                    gameObject.layer = LayerMask.NameToLayer("Default");
+                    (GameObject.Find("bridge_text").GetComponent<TextBinding>() as TextBinding).Decrement();
+
+
+                    GameObject[] buttons = GameObject.FindGameObjectsWithTag("ModifierButton");
+                    foreach (GameObject button in buttons)
+                    {
+                        (button.GetComponent<Button>() as Button).interactable = true;
+                    }
+                }
+
             }
             else if (Input.GetMouseButtonDown(1))
             {

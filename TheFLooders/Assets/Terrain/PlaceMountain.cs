@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Quand est ajouté à un GameObject, va suivre
@@ -29,9 +30,18 @@ public class PlaceMountain : MonoBehaviour {
             if (Input.GetMouseButtonDown(0))
             {
                 Placed = rayCast;
-                //Change layer
-                gameObject.layer = LayerMask.NameToLayer("Default");
-                (GameObject.Find("mountain_text").GetComponent<TextBinding>() as TextBinding).Decrement();
+                if (Placed)
+                {
+                    //Change layer
+                    gameObject.layer = LayerMask.NameToLayer("Default");
+                    (GameObject.Find("mountain_text").GetComponent<TextBinding>() as TextBinding).Decrement();
+
+                    GameObject[] buttons = GameObject.FindGameObjectsWithTag("ModifierButton");
+                    foreach (GameObject button in buttons)
+                    {
+                        (button.GetComponent<Button>() as Button).interactable = true;
+                    }
+                }
 
                 //Decrement number of mountains
             }

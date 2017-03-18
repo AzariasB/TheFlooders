@@ -75,6 +75,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Attraction.cs" />
+    <Compile Include="Assets\Scripts\GlissementPieton.cs" />
+    <Compile Include="Assets\Scripts\MovementPieton.cs" />
     <Compile Include="Assets\Terrain\Churl.cs" />
     <Compile Include="Assets\Terrain\TerrainHeightMap.cs" />
   </ItemGroup>

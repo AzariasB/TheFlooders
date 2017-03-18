@@ -20,7 +20,7 @@ public class PlaceBridge : MonoBehaviour {
             bool rayCast;
             RaycastHit hitPoint;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            rayCast = Physics.Raycast(ray, out hitPoint, 100.0f);
+            rayCast = Physics.Raycast(ray, out hitPoint, 10000.0f);
             float rotation = Input.GetAxis("Mouse ScrollWheel");
             gameObject.transform.Rotate(Vector3.up * rotation * 8192 * Time.deltaTime);
             if (Input.GetMouseButtonDown(0))

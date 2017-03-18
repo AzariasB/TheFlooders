@@ -20,19 +20,16 @@ public class AddMountain : MonoBehaviour {
 
     void AddMountainTask()
     {
-        if((GetComponent<Button>() as Button).IsInteractable())
+        if ((GameObject.Find("mountain_text").GetComponent<TextBinding>() as TextBinding).CanDecrement())
         {
-            if ((GameObject.Find("mountain_text").GetComponent<TextBinding>() as TextBinding).CanDecrement())
-            {
-                GameObject nwObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                nwObj.transform.position = new Vector3(0, 10, 0);
-                nwObj.gameObject.tag = "Mountain";
-                nwObj.layer = LayerMask.NameToLayer("Ignore Raycast");
-                nwObj.AddComponent<PlaceMountain>();
-                Destroy(nwObj.GetComponent<Collider>());
+            GameObject nwObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            nwObj.transform.position = new Vector3(0, 10, 0);
+            nwObj.gameObject.tag = "Mountain";
+            nwObj.layer = LayerMask.NameToLayer("Ignore Raycast");
+            nwObj.AddComponent<PlaceMountain>();
+            (nwObj.GetComponent<Collider>() as Collider).isTrigger = true;
 
-                TextBinding.DisableButtons();
-            }
+            TextBinding.DisableButtons();
         }
     }
 }

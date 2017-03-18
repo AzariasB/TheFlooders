@@ -26,7 +26,7 @@ public class PlaceMountain : MonoBehaviour {
             bool rayCast;
             RaycastHit hitPoint;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            rayCast = Physics.Raycast(ray, out hitPoint, 100.0f);
+            rayCast = Physics.Raycast(ray, out hitPoint, 10000.0f);
             if (Input.GetMouseButtonDown(0))
             {
                 Placed = rayCast;

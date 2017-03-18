@@ -111,6 +111,29 @@ namespace AssemblyCSharp
             if (_heightMapTexture == null || _width <= 0 || _height <= 0 && _minSubdivisions < 1)
                 return;
 
+            // Debug temporaire : tout plat !
+            _heightData = new float[4][];
+            Vector3[] verts = new Vector3[4] {
+                new Vector3(- Width/2, -Height/2,0),
+                new Vector3(Width/2, -Height/2,0),
+                new Vector3(- Width/2, Height/2,0),
+                new Vector3(Width/2, Height/2,0)
+            };
+            int[] tris = new int[6]
+            {
+                0, 1, 2, 2, 1, 3
+            };
+            Vector2[] uvs = new Vector2[]
+                {
+                    new Vector2(0, 0),
+                    new Vector2(1, 0),
+                    new Vector2(0, 1),
+                    new Vector2(1, 1)
+            };
+            HeightMapMesh.vertices = verts;
+            HeightMapMesh.triangles = tris;
+            HeightMapMesh.uv = uvs;
+
             // Calcul du nombre de subdivisions sur chaque axe
             int nSubdivX = 0;
             int nSubdivY = 0;

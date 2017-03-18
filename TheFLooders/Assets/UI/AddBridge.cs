@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class AddBridge : MonoBehaviour {
 
 
-    private Vector3 bridgeSize = new Vector3(1, 1, (float)0.5);
+    private Vector3 bridgeSize = new Vector3((float)0.5, 1, 2);
 
 	// Use this for initialization
 	void Start () {
@@ -26,10 +26,12 @@ public class AddBridge : MonoBehaviour {
         {
             GameObject nwBrige = GameObject.CreatePrimitive(PrimitiveType.Plane);
 
-            //Set material
-            Material bridgeMat = Resources.Load("Terrain/Bridge_Material", typeof(Material)) as Material;
-            nwBrige.GetComponent<Renderer>().material = bridgeMat;
+            //Remove collision
             Destroy(nwBrige.GetComponent<Collider>());
+
+            //Set material
+            Material bridgeMat = Resources.Load("Pont", typeof(Material)) as Material;
+            nwBrige.GetComponent<Renderer>().material = bridgeMat;
 
             //Change size ...
             nwBrige.transform.localScale = bridgeSize;

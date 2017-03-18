@@ -16,7 +16,7 @@ public class SpeedReducer : MonoBehaviour {
     void OnTriggerEnter(Collider collider)
     {
         collider.gameObject.AddComponent<Drag>();
-        (collider.gameObject.GetComponent<Drag>() as Drag).DragDivisor = 0.5f;
+        (collider.gameObject.GetComponent<Drag>() as Drag).DragDivisor = 0.1f;
     }
 
     void OnTriggerExit(Collider collider)

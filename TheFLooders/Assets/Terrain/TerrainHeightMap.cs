@@ -20,8 +20,12 @@ namespace AssemblyCSharp
                 }
             }
         }
+
         [Tooltip("MeshFilter cible où ce composant écrit le mesh qu'il produit automatiquement")]
         public MeshFilter TargetMeshFilter;
+
+        [Tooltip("MeshCollider cible où ce composant écrit le mesh qu'il produit automatiquement")]
+        public MeshCollider TargetMeshCollider;
 
         [Tooltip("Hauteur maximale du terrain (amplitude des déformations)")]
         public float TerrainMaxHeight = 20;
@@ -107,11 +111,30 @@ namespace AssemblyCSharp
             // RecomputeSamples ();
         }
 
-        //public delegate float TerrainTransform(Vector3 localPosition, float );
+        public delegate float TerrainTransform(Vector3 localPosition, float currentValue);
 
-        //public ApplyOnZone(Rect targetZone, ddd Transform) {
+        public void ApplyOnZone(Rect targetZone, TerrainTransform transformOperator) {
+            if (IsEmpty())
+                return;
 
-        //}
+            // Détermination des indices concernés
+            int nCols = _heightData.Length;
+            int nRows = _heightData [0].Length;
+            int colIdXMin = Mathf.CeilToInt(Mathf.Clamp((targetZone.xMin + Width / 2) / Width * (nCols -1), 0, nCols-1));
+            int colIdXMax = (int) ((Width / 2 - targetZone.xMax) / Width * (nCols -1));
+            int colIdYMin = Mathf.CeilToInt(Mathf.Clamp((targetZone.yMin + Height / 2) / Height * (nRows -1), 0, nRows-1));
+            int colIdYMax = (int) ((Height / 2 - targetZone.yMax) / Height * (nRows -1));
+
+            // Copie de la zone affectée pour faire les modifs sans changer
+            // l'état courant.
+
+            // Passage de l'opérateur
+
+            // Recopie des nouvelles données, modification de l'état courant.
+
+            // Recalcul du mesh.
+
+        }
 
         /// <summary>
         /// Echantillonne la hauteur du terrain sur une grille
@@ -124,8 +147,7 @@ namespace AssemblyCSharp
             _heightData = null;
 
             // test de validité
-            if (_heightMapTexture == null || _heightMapTexture.width <= 0 || _heightMapTexture.height <= 0 ||
-                _width <= 0 || _minSubdivisions < 1) {
+            if (IsEmpty()) {
                 return;
             }
 
@@ -193,7 +215,17 @@ namespace AssemblyCSharp
                 RebuildTrianglesAndUVs(nSubdivX, nSubdivY);
             }
 
-            TargetMeshFilter.mesh = HeightMapMesh;
+            if (TargetMeshFilter != null)
+                TargetMeshFilter.mesh = HeightMapMesh;
+            if (TargetMeshCollider != null)
+                TargetMeshCollider.sharedMesh = HeightMapMesh;
+        }
+
+        private bool IsEmpty() {
+            return (
+                _heightMapTexture == null || _heightMapTexture.width <= 0 ||
+                _heightMapTexture.height <= 0 ||
+                _width <= 0 || _minSubdivisions < 1);
         }
 
         private void RebuildTrianglesAndUVs() {

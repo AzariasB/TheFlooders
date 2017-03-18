@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class AddBridge : MonoBehaviour {
 
 
-    private Vector3 bridgeSize = new Vector3(6, 1, 2);
+    private Vector3 bridgeSize = new Vector3(1, 1, (float)0.5);
 
 	// Use this for initialization
 	void Start () {
@@ -29,6 +29,7 @@ public class AddBridge : MonoBehaviour {
             //Set material
             Material bridgeMat = Resources.Load("Terrain/Bridge_Material", typeof(Material)) as Material;
             nwBrige.GetComponent<Renderer>().material = bridgeMat;
+            Destroy(nwBrige.GetComponent<Collider>());
 
             //Change size ...
             nwBrige.transform.localScale = bridgeSize;
@@ -37,11 +38,7 @@ public class AddBridge : MonoBehaviour {
             nwBrige.layer = LayerMask.NameToLayer("Ignore Raycast");
             nwBrige.AddComponent<PlaceBridge>();
 
-            GameObject[] objects = GameObject.FindGameObjectsWithTag("ModifierButton");
-            foreach (GameObject obj in objects)
-            {
-                (obj.GetComponent<Button>() as Button).interactable = false;
-            }
+            TextBinding.DisableButtons();
         }
     }
 }

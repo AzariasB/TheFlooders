@@ -20,10 +20,15 @@ namespace AssemblyCSharp
                 }
             }
         }
+        [Tooltip("MeshFilter cible où ce composant écrit le mesh qu'il produit automatiquement")]
+        public MeshFilter TargetMeshFilter;
+
+        [Tooltip("Hauteur maximale du terrain (amplitude des déformations)")]
+        public float TerrainMaxHeight = 20;
 
         [Tooltip ("Nombre de subdivisions de la dimension la plus petite du terrain.")]
         [SerializeField]
-        private int _minSubdivisions = 10;
+        private int _minSubdivisions = 1;
 
         public int MinSubdivisions {
             get {
@@ -94,8 +99,19 @@ namespace AssemblyCSharp
         private void Start ()
         {
             HeightMapMesh = new Mesh ();
+            HeightMapMesh.name = "AltitudeMesh";
             RecomputeSamples ();
         }
+
+        private void Update() {
+            // RecomputeSamples ();
+        }
+
+        //public delegate float TerrainTransform(Vector3 localPosition, float );
+
+        //public ApplyOnZone(Rect targetZone, ddd Transform) {
+
+        //}
 
         /// <summary>
         /// Echantillonne la hauteur du terrain sur une grille
@@ -108,31 +124,12 @@ namespace AssemblyCSharp
             _heightData = null;
 
             // test de validité
-            if (_heightMapTexture == null || _width <= 0 || _height <= 0 && _minSubdivisions < 1)
+            if (_heightMapTexture == null || _heightMapTexture.width <= 0 || _heightMapTexture.height <= 0 ||
+                _width <= 0 || _minSubdivisions < 1) {
                 return;
+            }
 
-            // Debug temporaire : tout plat !
-            _heightData = new float[4][];
-            Vector3[] verts = new Vector3[4] {
-                new Vector3(- Width/2, -Height/2,0),
-                new Vector3(Width/2, -Height/2,0),
-                new Vector3(- Width/2, Height/2,0),
-                new Vector3(Width/2, Height/2,0)
-            };
-            int[] tris = new int[6]
-            {
-                0, 1, 2, 2, 1, 3
-            };
-            Vector2[] uvs = new Vector2[]
-                {
-                    new Vector2(0, 0),
-                    new Vector2(1, 0),
-                    new Vector2(0, 1),
-                    new Vector2(1, 1)
-            };
-            HeightMapMesh.vertices = verts;
-            HeightMapMesh.triangles = tris;
-            HeightMapMesh.uv = uvs;
+            _height = Width * _heightMapTexture.height / _heightMapTexture.width;
 
             // Calcul du nombre de subdivisions sur chaque axe
             int nSubdivX = 0;
@@ -143,14 +140,29 @@ namespace AssemblyCSharp
                     nSubdivX = Mathf.CeilToInt (_width / _height * _minSubdivisions);
                 } else {
                     nSubdivX = _minSubdivisions;
-                    nSubdivY = Mathf.CeilToInt (_width / _height * _minSubdivisions);
+                    nSubdivY = Mathf.CeilToInt (_height / _width * _minSubdivisions);
                 }
+            }
+
+            // Comparaison avec la taille précédente
+            bool sizeChanged;
+            if (oldData != null) {
+                sizeChanged = nSubdivX + 1 != oldData.Length || nSubdivY + 1 != oldData [0].Length;
+                oldData = null; // Pour que le GC puisse libérer ce tableau avant d'instancier le nouveau.
+            } else {
+                sizeChanged = true;
+            }
+
+            // Unity ne gère pas les meshes de plus de 65k sommets
+            if ((nSubdivX + 1) * (nSubdivY + 1) > 65000) {
+                Debug.LogError ("Ce terrain est trop détaillé, Unity ne peut pas représenter un Mesh de cette taille");
+                return;
             }
 
             // Instanciation du tableau des hauteurs.
             _heightData = new float[nSubdivX + 1][];
             for (int i = 0; i <= nSubdivX; i++)
-                _heightData [i] = new float[nSubdivY];
+                _heightData [i] = new float[nSubdivY + 1];
 
             // Echantillonnage de l'image source
             for (int colIdx = 0; colIdx <= nSubdivX; colIdx++) {
@@ -158,20 +170,73 @@ namespace AssemblyCSharp
                     int pixelXIdx = (int)((float)colIdx / nSubdivX * _heightMapTexture.width);
                     int pixelYIdx = (int)((float)rowIdx / nSubdivY * _heightMapTexture.height);
                     Color c = _heightMapTexture.GetPixel (pixelXIdx, pixelYIdx);
-                    _heightData [colIdx] [rowIdx] = c.grayscale;
+                    _heightData [colIdx] [rowIdx] = c.grayscale * TerrainMaxHeight;
                 }
             }
 
-            // Transformation en vertex, triangles et UVs
+            // Transformation en vertex
             Vector3[] vertices = new Vector3[(nSubdivX + 1) * (nSubdivY + 1)];
             for (int colIdx = 0; colIdx <= nSubdivX; colIdx++) {
                 for (int rowIdx = 0; rowIdx <= nSubdivY; rowIdx++) {
-                    float x = colIdx * Width / nSubdivX;
-                    float y = rowIdx * Height / nSubdivY;
-                    vertices [colIdx * (nSubdivX + 1) + rowIdx] = new Vector3 (x, y, _heightData [colIdx] [rowIdx]);
+                    int vertexIdx = colIdx * (nSubdivY + 1) + rowIdx;
+                    float x = colIdx * Width / nSubdivX - Width / 2;
+                    float z = rowIdx * Height / nSubdivY - Height / 2;
+                    vertices [vertexIdx] = new Vector3 (x, _heightData [colIdx] [rowIdx], z);
                 }
             }
 
+            // Remplissage des sommets du mesh
+            HeightMapMesh.vertices = vertices;
+
+            // Recalcul des triangles et UV si nécessaire
+            if (sizeChanged) {
+                RebuildTrianglesAndUVs(nSubdivX, nSubdivY);
+            }
+
+            TargetMeshFilter.mesh = HeightMapMesh;
+        }
+
+        private void RebuildTrianglesAndUVs() {
+            int nSubdivX = 0;
+            int nSubdivY = 0;
+            if (_width > 0 && _height > 0 && _minSubdivisions >= 1) {
+                if (_width > _height) {
+                    nSubdivY = _minSubdivisions;
+                    nSubdivX = Mathf.CeilToInt (_width / _height * _minSubdivisions);
+                } else {
+                    nSubdivX = _minSubdivisions;
+                    nSubdivY = Mathf.CeilToInt (_height / _width * _minSubdivisions);
+                }
+            }
+            RebuildTrianglesAndUVs(nSubdivX, nSubdivY);
+        }
+
+        private void RebuildTrianglesAndUVs(int nSubdivX, int nSubdivY) {
+            
+            Vector2[] uvs = new Vector2[(nSubdivX + 1) * (nSubdivY + 1)];
+            for (int colIdx = 0; colIdx <= nSubdivX; colIdx++) {
+                for (int rowIdx = 0; rowIdx <= nSubdivY; rowIdx++) {
+                    int vertexIdx = colIdx * (nSubdivY + 1) + rowIdx;
+                    uvs [vertexIdx] = new Vector2 ((float) colIdx / nSubdivX, (float) rowIdx / nSubdivY);
+                }
+            }
+
+            int[] triangles = new int[6 * nSubdivX  * nSubdivY]; // Un quad = 2 triangles = 6 sommets
+            for (int colIdx = 0; colIdx < nSubdivX; colIdx++) {
+                for (int rowIdx = 0; rowIdx < nSubdivY; rowIdx++) {
+                    int baseVertexIndex = (nSubdivY + 1) * colIdx + rowIdx;
+                    int baseIdx = 6 * (nSubdivY * colIdx + rowIdx);
+                    triangles[baseIdx] = baseVertexIndex;
+                    triangles[baseIdx+1] = baseVertexIndex + 1;
+                    triangles[baseIdx+2] = baseVertexIndex + nSubdivY + 1;
+                    triangles[baseIdx+3] = baseVertexIndex + nSubdivY + 1;
+                    triangles[baseIdx+4] = baseVertexIndex + 1;
+                    triangles[baseIdx+5] = baseVertexIndex + nSubdivY + 2;
+                }
+            }
+
+            HeightMapMesh.triangles = triangles;
+            HeightMapMesh.uv = uvs;
         }
 
     }

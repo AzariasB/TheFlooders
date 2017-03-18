@@ -79,7 +79,14 @@
     <Compile Include="Assets\Scripts\GlissementPieton.cs" />
     <Compile Include="Assets\Scripts\MovementPieton.cs" />
     <Compile Include="Assets\Terrain\Churl.cs" />
+    <Compile Include="Assets\Terrain\PlaceBridge.cs" />
+    <Compile Include="Assets\Terrain\PlaceMountain.cs" />
     <Compile Include="Assets\Terrain\TerrainHeightMap.cs" />
+    <Compile Include="Assets\UI\AddBridge.cs" />
+    <Compile Include="Assets\UI\AddMountain.cs" />
+    <Compile Include="Assets\UI\Game.cs" />
+    <Compile Include="Assets\UI\RemoveMountain.cs" />
+    <Compile Include="Assets\UI\TextBinding.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

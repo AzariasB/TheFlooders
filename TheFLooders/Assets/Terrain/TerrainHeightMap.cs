@@ -20,8 +20,12 @@ namespace AssemblyCSharp
                 }
             }
         }
+
         [Tooltip("MeshFilter cible où ce composant écrit le mesh qu'il produit automatiquement")]
         public MeshFilter TargetMeshFilter;
+
+        [Tooltip("MeshCollider cible où ce composant écrit le mesh qu'il produit automatiquement")]
+        public MeshCollider TargetMeshCollider;
 
         [Tooltip("Hauteur maximale du terrain (amplitude des déformations)")]
         public float TerrainMaxHeight = 20;
@@ -211,7 +215,10 @@ namespace AssemblyCSharp
                 RebuildTrianglesAndUVs(nSubdivX, nSubdivY);
             }
 
-            TargetMeshFilter.mesh = HeightMapMesh;
+            if (TargetMeshFilter != null)
+                TargetMeshFilter.mesh = HeightMapMesh;
+            if (TargetMeshCollider != null)
+                TargetMeshCollider.sharedMesh = HeightMapMesh;
         }
 
         private bool IsEmpty() {

@@ -101,8 +101,9 @@ GameObject:
   - component: {fileID: 184272477}
   - component: {fileID: 184272479}
   - component: {fileID: 184272478}
+  - component: {fileID: 184272480}
   m_Layer: 5
-  m_Name: Text
+  m_Name: mountain_text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -165,6 +166,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 184272476}
+--- !u!114 &184272480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 184272476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c334dcf1d9cc9b043a7c1fa785658442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &184903835
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,7 +384,7 @@ GameObject:
   - component: {fileID: 547266937}
   - component: {fileID: 547266940}
   m_Layer: 5
-  m_Name: Button
+  m_Name: mountain_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -777,8 +789,9 @@ GameObject:
   - component: {fileID: 1431616569}
   - component: {fileID: 1431616571}
   - component: {fileID: 1431616570}
+  - component: {fileID: 1431616572}
   m_Layer: 5
-  m_Name: Text
+  m_Name: bridge_text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -841,6 +854,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1431616568}
+--- !u!114 &1431616572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1431616568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f828cd5c260e02b4aa8229677f516400, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1659395871
 GameObject:
   m_ObjectHideFlags: 0

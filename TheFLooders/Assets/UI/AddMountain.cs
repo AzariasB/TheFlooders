@@ -20,11 +20,13 @@ public class AddMountain : MonoBehaviour {
 
     void AddMountainTask()
     {
-        print("Adding object");
-        GameObject nwObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        nwObj.transform.position = new Vector3(0, 10, 0);
-        //nwObj.AddComponent<Rigidbody>();
-        nwObj.layer = LayerMask.NameToLayer("Ignore Raycast");
-        nwObj.AddComponent<Mountain>();
+        if( (GameObject.Find("mountain_text").GetComponent<MountainCount>() as MountainCount).CanPlaceMountain())
+        {
+            GameObject nwObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            nwObj.transform.position = new Vector3(0, 10, 0);
+            //nwObj.AddComponent<Rigidbody>();
+            nwObj.layer = LayerMask.NameToLayer("Ignore Raycast");
+            nwObj.AddComponent<PlaceMountain>();
+        }
     }
 }

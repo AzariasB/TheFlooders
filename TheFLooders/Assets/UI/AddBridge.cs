@@ -20,10 +20,13 @@ public class AddBridge : MonoBehaviour {
     void AddBrigeTask()
     {
         //Check if remain enough bridges
-        GameObject nwBrige = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        //Change size ...
+        if((GameObject.Find("bridge_text").GetComponent<BridgeCount>() as BridgeCount).CanPlaceBridge())
+        {
+            GameObject nwBrige = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            //Change size ...
 
-        nwBrige.layer = LayerMask.NameToLayer("Ignore Raycast");
-        nwBrige.AddComponent<PlaceBridge>();
+            nwBrige.layer = LayerMask.NameToLayer("Ignore Raycast");
+            nwBrige.AddComponent<PlaceBridge>();
+        }
     }
 }

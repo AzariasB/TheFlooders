@@ -7,7 +7,7 @@ using UnityEngine;
 /// la souris, jusqu'au clic de celle-ci, quan cliqué,
 /// va poser l'objet en question
 /// </summary>
-public class Mountain : MonoBehaviour {
+public class PlaceMountain : MonoBehaviour {
 
     public bool Placed { get; set; }
 
@@ -31,7 +31,16 @@ public class Mountain : MonoBehaviour {
                 Placed = rayCast;
                 //Change layer
                 gameObject.layer = LayerMask.NameToLayer("Default");
-            }else
+                (GameObject.Find("mountain_text").GetComponent < MountainCount >() as MountainCount).PlaceMountain();
+
+                //Decrement number of mountains
+            }
+            else if (Input.GetMouseButtonDown(1))
+            {
+                //Cancel
+                Destroy(gameObject);
+            }
+            else
             {
                 transform.position = hitPoint.point;
             }

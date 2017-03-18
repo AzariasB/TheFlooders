@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Terrain\Churl.cs" />
      <Compile Include="Assets\Terrain\Mountain.cs" />
+     <Compile Include="Assets\Terrain\PlaceBridge.cs" />
      <Compile Include="Assets\Terrain\TerrainHeightMap.cs" />
      <Compile Include="Assets\UI\AddBridge.cs" />
      <Compile Include="Assets\UI\AddMountain.cs" />

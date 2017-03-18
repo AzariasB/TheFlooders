@@ -5,12 +5,10 @@ using UnityEngine;
 public class PlaceBridge : MonoBehaviour {
 
     bool Placed { get; set; }
-    bool Rotated { get; set; }
 
 	// Use this for initialization
 	void Start () {
         Placed = false;
-        Rotated = false;
 	}
 	
 	// Update is called once per frame
@@ -22,6 +20,8 @@ public class PlaceBridge : MonoBehaviour {
             RaycastHit hitPoint;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             rayCast = Physics.Raycast(ray, out hitPoint, 100.0f);
+            float rotation = Input.GetAxis("Mouse ScrollWheel");
+            gameObject.transform.Rotate(Vector3.up * rotation * 8192 * Time.deltaTime);
             if (Input.GetMouseButtonDown(0))
             {
                 Placed = rayCast;
@@ -32,17 +32,6 @@ public class PlaceBridge : MonoBehaviour {
             {
                 transform.position = (hitPoint.point + new Vector3(0 , 1, 0) );
             }
-
-        }else if(!Rotated)
-        {
-            float rotation = Input.GetAxis("Mouse ScrollWheel");
-            gameObject.transform.Rotate(Vector3.up * rotation * 8192 * Time.deltaTime );
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                Rotated = true;
-            }
-
         }
     }
 }

@@ -1,7 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:TheFLooders/Assets/Terrain/Level 1/MapTopo_1920.png.meta
 guid: d3dfd94d08db9444fb8482274a74433f
 timeCreated: 1489879722
 licenseType: Free
+=======
+guid: 65639b2d5fe0709499a352e2a54dff0a
+timeCreated: 1489879389
+licenseType: Pro
+>>>>>>> f33f1d4f35c77e644b1d27c32034039be36d0384:TheFLooders/Assets/Terrain/Level 1/MapTopo_1920.png.meta
 TextureImporter:
   fileIDToRecycleName: {}
   serializedVersion: 4

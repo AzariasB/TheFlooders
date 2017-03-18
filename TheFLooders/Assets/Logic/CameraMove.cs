@@ -5,12 +5,8 @@ using UnityEngine;
 namespace AssemblyCSharp {
     public class CameraMove : MonoBehaviour {
 
-        private bool _started = false;
-
         [Tooltip("Temps à partir duquel la caméra commence à bouger")]
-        public float TimeStart;
-
-        public int Speed;
+        public float moveDelay;
 
         [Tooltip("Le terrain par rapport le long duquel cette caméra doit défiler.")]
         public TerrainHeightMap targetTerrain;
@@ -18,7 +14,11 @@ namespace AssemblyCSharp {
         [Tooltip("La caméra du niveau, dont la taille sera configurée")]
         public Camera targetCamera;
 
-        private float _currentTime;
+        [Tooltip("Temps de trajet de la caméra (durée du niveau) en secondes")]
+        public float travelDuration = 60;
+
+        private Vector3 _targetPosition;
+        private float _accumulatedTime;
 
         // Use this for initialization
         void Start () {
@@ -40,26 +40,26 @@ namespace AssemblyCSharp {
                 // Positionnement de la caméra
                 transform.parent = targetTerrain.transform;
                 transform.localPosition = new Vector3 (0, 100, (targetTerrain.Height - desiredCamHeight) / 2);
+
+                // Calcul de la vitesse de translation future
+                _targetPosition = new Vector3 (0, 100, (- targetTerrain.Height + desiredCamHeight) / 2);
             }
         }
 
         // Update is called once per frame
         void Update () {
-            if(_started)
-            {
-                gameObject.transform.position += new Vector3(0, 0, -Speed * Time.deltaTime);
-                if(gameObject.transform.position.z < 42)
-                {
-                    //No need to move anymore
-                    Destroy(gameObject.GetComponent<CameraMove>());
-                }
-            }
-            else
-            {
-                _currentTime += Time.deltaTime;
-                if(_currentTime >= TimeStart)
-                {
-                    _started = true;
+            _accumulatedTime += Time.deltaTime;
+            if (_accumulatedTime > moveDelay) {
+                if (_accumulatedTime - moveDelay < travelDuration) {
+                    float remainingTime = travelDuration - (_accumulatedTime - moveDelay);
+                    Vector3 direction = (_targetPosition - transform.position).normalized;
+                    float speed = 0;
+                    if (remainingTime != 0)
+                        speed =(_targetPosition - transform.position).magnitude / remainingTime;
+                    transform.Translate(direction * speed * Time.deltaTime);
+                } else {
+                    transform.position = _targetPosition;
+                    enabled = false;
                 }
             }
         }

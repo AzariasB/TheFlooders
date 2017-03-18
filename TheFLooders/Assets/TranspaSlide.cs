@@ -16,23 +16,20 @@ public class TranspaSlide : MonoBehaviour {
     [Tooltip("Transparence des couches superposées au fond")]
     public float layersTransparency = 0.5f;
 
-    private List<GameObject> createdLayers;
-
     [HideInInspector]
     public float yDelta {get; set;}
 
     public TranspaSlide() {
-        yDelta = 0.1f;
+        yDelta = 0.01f;
     }
 
-	void Start () {
-        createdLayers = new List<GameObject> ();
+    void Start () {
         if (transparentLayer == null) {
             Debug.Log ("Calque transparent non affecté");
         }
-	}
-	
-	void Update () {
+    }
+
+    void Update () {
         if (transparentLayer != null) {
             MeshRenderer mr = transparentLayer.GetComponent<MeshRenderer> ();
             Material mat = mr.material;
@@ -47,5 +44,5 @@ public class TranspaSlide : MonoBehaviour {
                 mat.color = new Color (1, 1, 1, alpha);
             }
         }
-	}
+    }
 }

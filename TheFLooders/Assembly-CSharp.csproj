@@ -47,7 +47,10 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Terrain\Churl.cs" />
+     <Compile Include="Assets\Terrain\Mountain.cs" />
      <Compile Include="Assets\Terrain\TerrainHeightMap.cs" />
+     <Compile Include="Assets\UI\AddBridge.cs" />
+     <Compile Include="Assets\UI\AddMountain.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

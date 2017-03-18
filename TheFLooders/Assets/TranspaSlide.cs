@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class TranspaSlide : MonoBehaviour {
 
-    [Tooltip("Calque d'arrière-plan à dupliquer")]
-    public GameObject backgroundLayer;
-
-    [Tooltip("Nombre de calques superposés au calque de fond")]
-    public int layerCount = 2;
+    [Tooltip("Calque transparent")]
+    public GameObject transparentLayer;
 
     [Tooltip("Amplitude du mouvement")]
     public float amplitude = 1;
@@ -24,27 +21,30 @@ public class TranspaSlide : MonoBehaviour {
     [HideInInspector]
     public float yDelta {get; set;}
 
-    private float elapsedTime = 0;
+    public TranspaSlide() {
+        yDelta = 0.1f;
+    }
 
 	void Start () {
-        yDelta = 0.01f;
-        if (backgroundLayer == null) {
-            Debug.LogError("Le calque d'arrière-plan n'est pas affecté");
+        createdLayers = new List<GameObject> ();
+        if (transparentLayer == null) {
+            Debug.Log ("Calque transparent non affecté");
         }
 	}
 	
 	void Update () {
-        elapsedTime += Time.deltaTime;
-        layerCount = (layerCount >= 0 ? layerCount : 0);
+        if (transparentLayer != null) {
+            MeshRenderer mr = transparentLayer.GetComponent<MeshRenderer> ();
+            Material mat = mr.material;
+            if (mat != null) {
+                // Position
+                float phase = Time.time * timeScale;
+                phase = phase - Mathf.PI * ((int) (phase / Mathf.PI)) - Mathf.PI/2;
+                transparentLayer.transform.localPosition = new Vector3 (amplitude * Mathf.Sin (phase), yDelta, 0);
 
-        if (backgroundLayer != null && layerCount != createdLayers.Count) {
-            while (createdLayers.Count > layerCount) {
-                Destroy(createdLayers [0]);
-                createdLayers.RemoveAt(0);
-            }
-            while (createdLayers.Count > layerCount) {
-                GameObject newLayer = Instantiate(backgroundLayer, backgroundLayer.transform, false);
-                createdLayers.Add(newLayer);
+                // Couleur
+                float alpha = Mathf.Clamp01 (layersTransparency * Mathf.Sin (phase + Mathf.PI / 2));
+                mat.color = new Color (1, 1, 1, alpha);
             }
         }
 	}

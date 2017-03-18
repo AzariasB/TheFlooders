@@ -22,12 +22,20 @@ public class AddMountain : MonoBehaviour {
     {
         if ((GameObject.Find("mountain_text").GetComponent<TextBinding>() as TextBinding).CanDecrement())
         {
-            GameObject nwObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            nwObj.transform.position = new Vector3(0, 10, 0);
+            GameObject nwObj = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            Destroy(nwObj.GetComponent<Collider>());
             nwObj.gameObject.tag = "Mountain";
+
+            //Not perturbing raycast
             nwObj.layer = LayerMask.NameToLayer("Ignore Raycast");
+
+            //Rotate (otherwise, it's upside-down)
+            nwObj.transform.Rotate(new Vector3(0, 180, 0));
+
+            Material mountainMaterial = Resources.Load("Mountain_Material", typeof(Material)) as Material;
+            nwObj.GetComponent<Renderer>().material = mountainMaterial;
+
             nwObj.AddComponent<PlaceMountain>();
-            (nwObj.GetComponent<Collider>() as Collider).isTrigger = true;
 
             TextBinding.DisableButtons();
         }

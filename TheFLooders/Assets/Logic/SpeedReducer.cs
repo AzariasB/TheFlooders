@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SpeedReducer : MonoBehaviour {
 
+    public float DragDivisor;
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -15,8 +17,7 @@ public class SpeedReducer : MonoBehaviour {
 
     void OnTriggerEnter(Collider collider)
     {
-        collider.gameObject.AddComponent<Drag>();
-        (collider.gameObject.GetComponent<Drag>() as Drag).DragDivisor = 0.1f;
+        (collider.gameObject.AddComponent<Drag>() as Drag).DragDivisor = DragDivisor;
     }
 
     void OnTriggerExit(Collider collider)

@@ -34,7 +34,7 @@ public class PlaceClay : MonoBehaviour {
                     //Add the collider now, to slow the player down
                     gameObject.AddComponent<BoxCollider>();
                     (gameObject.GetComponent<BoxCollider>() as BoxCollider).isTrigger = true;
-                    gameObject.AddComponent<SpeedReducer>();
+                    (gameObject.AddComponent<SpeedReducer>() as SpeedReducer).DragDivisor = 0.1f;
                     TextBinding.EnableButtons();
                 }
 

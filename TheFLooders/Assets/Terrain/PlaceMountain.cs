@@ -34,6 +34,9 @@ public class PlaceMountain : MonoBehaviour {
                 {
                     //Change layer
                     gameObject.layer = LayerMask.NameToLayer("Default");
+                    gameObject.transform.position += new Vector3(0, 0.5f, 0);
+                    (gameObject.AddComponent<BoxCollider>() as BoxCollider).isTrigger = true;
+                    (gameObject.AddComponent<SpeedReducer>() as SpeedReducer).DragDivisor = 5;
                     (GameObject.Find("mountain_text").GetComponent<TextBinding>() as TextBinding).Decrement();
                     TextBinding.EnableButtons();
                 }

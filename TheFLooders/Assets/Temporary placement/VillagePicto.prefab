@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 64775123243905196}
   - component: {fileID: 23030181126224552}
   m_Layer: 0
-  m_Name: Quad
+  m_Name: VillagePicto
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -39,7 +39,7 @@ public class PlaceBridge : MonoBehaviour {
             {
                 //Cancel
                 Destroy(gameObject);
-                TextBinding.DisableButtons();
+                TextBinding.EnableButtons();
             }
             else
             {

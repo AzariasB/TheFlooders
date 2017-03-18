@@ -13,7 +13,6 @@ public class ClickChangeMaterial : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 
     void OnMouseOver()
@@ -22,7 +21,7 @@ public class ClickChangeMaterial : MonoBehaviour {
         {
             TextBinding.EnableButtons();
             gameObject.GetComponent<Renderer>().material = NwMaterial;
-            GameObject.Find("destroy_city").GetComponent<DestroyCity>().EndDestroying();
+            GameObject.Find("destroy_city").GetComponent<DestroyCity>().EndDestroying(gameObject);
         }
     }
 }

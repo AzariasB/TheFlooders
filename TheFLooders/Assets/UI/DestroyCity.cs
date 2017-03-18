@@ -13,12 +13,19 @@ public class DestroyCity : MonoBehaviour {
         (GetComponent<Button>() as Button).onClick.AddListener(DestroyCityTask);
 	}
 
-    public void EndDestroying()
+    public void EndDestroying(GameObject destroyed)
     {
-
+        if(destroyed != null)
+        {
+            GameObject.Find("cityDestroyText").GetComponent<TextBinding>().Decrement();
+        }
         _isDestroying = false;
         foreach(GameObject city in GameObject.FindGameObjectsWithTag("City"))
         {
+            if(city == destroyed)
+            {//add component 'waterHelper' => water moves faster
+                city.tag = "CityDestroyed";
+            }
             Destroy(city.GetComponent<ClickChangeMaterial>());
         }
         TextBinding.EnableButtons();
@@ -26,17 +33,23 @@ public class DestroyCity : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        if(Input.GetMouseButtonDown(1))
+        {
+            EndDestroying(null);
+        }
 	}
 
     public void DestroyCityTask()
     {
-        _isDestroying = true;
-        Material ruinMaterial = Resources.Load("RuinMaterial", typeof(Material)) as Material;
-        TextBinding.DisableButtons();
-        foreach(GameObject city in GameObject.FindGameObjectsWithTag("City"))
+        if(GameObject.Find("cityDestroyText").GetComponent<TextBinding>().CanDecrement() )
         {
-            city.AddComponent<ClickChangeMaterial>().NwMaterial = ruinMaterial;
+            _isDestroying = true;
+            Material ruinMaterial = Resources.Load("RuinMaterial", typeof(Material)) as Material;
+            TextBinding.DisableButtons();
+            foreach (GameObject city in GameObject.FindGameObjectsWithTag("City"))
+            {
+                city.AddComponent<ClickChangeMaterial>().NwMaterial = ruinMaterial;
+            }
         }
 
     }

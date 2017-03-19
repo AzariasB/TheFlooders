@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GraphNode {
 
-	public bool Sinked { get; set; }
+    public bool Sinked;
 
     public Vector3 Position;
 
@@ -25,6 +25,7 @@ public class GraphNode {
     {
         Position = position;
         _edges = new List<Edge>();
+        Sinked = false;
     }
 
     public void AddEge(Edge nwEdge)
@@ -61,10 +62,20 @@ public class GraphNode {
         }
     }
 
-    public void DebugTrace()
+    public void DebugTrace(string name = "")
     {
+        Material greenMat = Resources.Load("RedMaterial", typeof(Material)) as Material;
+        Material redMat = Resources.Load("GreenMaterial", typeof(Material)) as Material;
+
         GameObject debug = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+        if(!string.IsNullOrEmpty(name) )
+            debug.name = name;
+
+        GameObject.Destroy(debug.GetComponent<SphereCollider>());
+        debug.layer = LayerMask.NameToLayer("Ignore Raycast");
         debug.transform.position = Position;
+        debug.GetComponent<Renderer>().material = Sinked ? redMat : greenMat;
         Debug.Log(string.Format("x : {0} z : {1}", Position.x, Position.z));
     }
 

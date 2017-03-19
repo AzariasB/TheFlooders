@@ -15,15 +15,8 @@ public class Attraction : MonoBehaviour {
 	}
 
     // Update is called once per frame
-    void LateUpdate()
+    void FixedUpdate()
     {
-    //    foreach (Collider collider in Physics.OverlapSphere(transform.position, pullRadius)) 
-    //    {
-            // calculate direction from target to me
-     //       Vector3 forceDirection = transform.position - collider.transform.position;
-
-            // apply force on target towards me
-     //       collider.GetComponent<Rigidbody>().AddForce(forceDirection.normalized * pullForce * Time.fixedDeltaTime);
-     //   }
+        //ne marche pas donc supprime
     }
 }

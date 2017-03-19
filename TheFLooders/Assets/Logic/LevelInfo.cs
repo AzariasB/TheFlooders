@@ -31,14 +31,7 @@ public class LevelInfo : MonoBehaviour {
     [Tooltip("Temps à partir duquel la caméra commence à bouger")]
     public float _startDelay = 3;
 
-    public TerrainHeightMap HeightMap {
-        get {
-            return _heightMap;
-        }
-    }
-    [SerializeField]
-    [Tooltip("L'objet qui génère le terrain du plateau de jeu")]
-    private TerrainHeightMap _heightMap;
+	public bool iscompleted;
 
     public static LevelInfo Instance {
         get {
@@ -48,16 +41,14 @@ public class LevelInfo : MonoBehaviour {
             _instance = value;
         }
     }
+
+
+
     private static LevelInfo _instance;
 
 	// Use this for initialization
 	void Start () {
         Instance = this;
-
-        if (_heightMap == null)
-            _heightMap = GameObject.FindObjectOfType<TerrainHeightMap>();
-        if (_heightMap == null)
-            Debug.LogWarning("Le générateur de terrian n'est pas renseigné et n'a pas pu être trouvé.");
 	}
 	
 	// Update is called once per frame

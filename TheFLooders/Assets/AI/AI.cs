@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class AI : MonoBehaviour {
 
+    public float StartTime;
+
+    private float _currentTime;
+
     public float CloseDistance;
 
     private GraphNode _finalTarget;
@@ -16,19 +20,12 @@ public class AI : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         TileMap tm = GameObject.Find("TileMap").GetComponent<TileMap>();
-        _finalTarget = tm.GetNodeAtCoords(LevelInfo.Instance.Destination.x, LevelInfo.Instance.Destination.z);
-        
-        GraphNode startPosition = tm.GetNodeAtCoords(gameObject.transform.position.x, gameObject.transform.position.z);
-        if(startPosition != null)
-        {
-            startPosition.DebugTrace();
-            _path = tm.GetPath(startPosition, _finalTarget).ToList<GraphNode>();
-            NextTarget();
-            DebugPrint();
-        }else
-        {
-            Debug.LogError("Start position not found in graph");
-        }
+
+
+        _finalTarget = tm.GetNodeAtCoords(20, -80);
+       // print(string.Format("Arrival at  x : {0} y : {1}", LevelInfo.Instance.Destination.x, LevelInfo.Instance.Destination.y));
+
+        Recaculate();
 
         if (CloseDistance == 0)
             CloseDistance = 5;
@@ -39,7 +36,7 @@ public class AI : MonoBehaviour {
     {
         foreach(GraphNode g in _path)
         {
-            g.DebugTrace();
+            //g.DebugTrace();
         }
     }
 
@@ -50,20 +47,79 @@ public class AI : MonoBehaviour {
             _currentTarget = _path[0];
     }
 
-	// Update is called once per frame
-	void Update () {
-        if (CloseEnough())
+    public void Recaculate()
+    {
+        TileMap tm = GameObject.Find("TileMap").GetComponent<TileMap>();
+        GraphNode currentPosition = tm.GetNodeAtCoords(gameObject.transform.position.x, gameObject.transform.position.z);
+
+        if (currentPosition != null)
         {
+            //startPosition.DebugTrace();
+            _path = tm.GetPath(currentPosition, _finalTarget).ToList<GraphNode>();
             NextTarget();
+            DebugPrint();
         }
         else
         {
-            Vector3 mPos = gameObject.transform.position;
-            Vector3 flatTarget = new Vector3(_currentTarget.Position.x, 0, _currentTarget.Position.z);
-            Vector3 flatPos = new Vector3(mPos.x, 0, mPos.z);
-            Vector3 direction =  flatTarget - flatPos;
-            //Divide ... ?
-            GetComponent<Rigidbody>().velocity = direction;
+            Debug.LogError("Start position not found in graph");
+        }
+    }
+
+    /// <summary>
+    /// Checks if under the sea
+    /// </summary>
+    /// <returns></returns>
+    private bool IsDying()
+    {
+        bool rayCast;
+        RaycastHit hitPoint;
+
+        Vector3 mPos = gameObject.transform.position;
+        Vector3 target = new Vector3(mPos.x, 0, mPos.z);
+        Vector3 flatMapPosition = GameObject.Find("FlatMap").gameObject.transform.position;
+        Vector3 origin = new Vector3(target.x, flatMapPosition.y - 5, target.z);
+        Vector3 direction = target - origin;
+
+        Debug.DrawRay(origin, direction);
+
+
+        //Ray ray = Camera.main.ScreenPointToRay(mNode.Position);
+        rayCast = Physics.Raycast(origin, direction, out hitPoint, Mathf.Infinity);
+        if (rayCast && hitPoint.collider.gameObject.name != "Terrain generator")//Can't see it => underwater
+        {
+            return true;
+        }
+        return false;
+    }
+
+	// Update is called once per frame
+	void Update () {
+        if (IsDying())
+        {
+            //Dying sound
+            print("die");
+            Destroy(gameObject);
+            return;
+        }
+
+        if(_currentTime < StartTime)
+        {
+            _currentTime += Time.deltaTime;
+        }else
+        {
+            if (CloseEnough())
+            {
+                NextTarget();
+            }
+            else if (_currentTarget != null)
+            {
+                Vector3 mPos = gameObject.transform.position;
+                Vector3 flatTarget = new Vector3(_currentTarget.Position.x, 0, _currentTarget.Position.z);
+                Vector3 flatPos = new Vector3(mPos.x, 0, mPos.z);
+                Vector3 direction = flatTarget - flatPos;
+                //Divide ... ?
+                GetComponent<Rigidbody>().velocity = direction;
+            }
         }
 	}
 

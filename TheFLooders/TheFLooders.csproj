@@ -88,15 +88,18 @@
     <Compile Include="Assets\AI\Octree.cs" />
     <Compile Include="Assets\AI\OctreeNode.cs" />
     <Compile Include="Assets\AI\TileMap.cs" />
+    <Compile Include="Assets\Intro\IntroductionScreen.cs" />
     <Compile Include="Assets\Logic\CameraMove.cs" />
     <Compile Include="Assets\Logic\Drag.cs" />
     <Compile Include="Assets\Logic\LevelInfo.cs" />
     <Compile Include="Assets\Logic\PlayerController.cs" />
     <Compile Include="Assets\Logic\SpeedReducer.cs" />
+    <Compile Include="Assets\NavigationAgent.cs" />
     <Compile Include="Assets\NukeTerrain.cs" />
     <Compile Include="Assets\Scripts\Attraction.cs" />
     <Compile Include="Assets\Scripts\GlissementPieton.cs" />
     <Compile Include="Assets\Scripts\MovementPieton.cs" />
+    <Compile Include="Assets\StartMovie.cs" />
     <Compile Include="Assets\Terrain\Churl.cs" />
     <Compile Include="Assets\Terrain\PlaceBridge.cs" />
     <Compile Include="Assets\Terrain\PlaceClay.cs" />
@@ -114,8 +117,10 @@
     <Compile Include="Assets\UI\TextBinding.cs" />
     <Compile Include="Assets\Water\FloodControl.cs" />
     <Compile Include="Assets\Water\TranspaSlide.cs" />
+    <Compile Include="Assets\helico.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\AI\BehaviorTrees\AI_test.txt" />
     <None Include="Assets\RAIN\Editor\ScriptTemplates\BehaviorTreeTemplate.xml" />
     <None Include="Assets\RAIN\Editor\Shaders\RAINShader.shader" />
     <None Include="Assets\Terrain\TerrainIsoMap.shader" />

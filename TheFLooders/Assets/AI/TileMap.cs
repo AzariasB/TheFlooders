@@ -23,14 +23,13 @@ public class TileMap : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-        print("start");
         _nodes = new GraphNode[NodeRows][];
         for(int i = 0; i < NodeRows; i++)
         {
             _nodes[i] = new GraphNode[NodeColumns];
         }
 
-        TerrainHeightMap heightMap = GameObject.Find("HeightMap").GetComponent<TerrainHeightMap>();
+        TerrainHeightMap heightMap = GameObject.Find("Terrain generator").GetComponent<TerrainHeightMap>();
 
 
         _mapWidth = heightMap.Width;
@@ -75,9 +74,10 @@ public class TileMap : MonoBehaviour {
     private void CheckBase()
     {
         Material redMat = Resources.Load("RedMaterial", typeof(Material)) as Material;
-        FloodControl Control = GameObject.Find("Flood wave control").GetComponent<FloodControl>();
+        FloodControl Control = GameObject.Find("Flood water mover").GetComponent<FloodControl>();
 
         float waterHeight = Control.stillWaterPlane.transform.position.y;
+
 
         //Shows all the nodes
         for (int z = 0; z < NodeRows; z++)
@@ -153,7 +153,7 @@ public class TileMap : MonoBehaviour {
 
     void Update()
     {
-        FloodControl Control = GameObject.Find("Flood wave control").GetComponent<FloodControl>();
+        FloodControl Control = GameObject.Find("Flood water mover").GetComponent<FloodControl>();
         float waterHeight = Control.stillWaterPlane.transform.position.y;
         //Shows all the nodes
         for (int z = 0; z < NodeRows; z++)
@@ -204,6 +204,8 @@ public class TileMap : MonoBehaviour {
 
     public Queue<GraphNode> GetPath(GraphNode from, GraphNode to)
     {
+
+        to.DebugTrace("Arrival");
         Queue<GraphNode> TraverseOrder = new Queue<GraphNode>();
 
         Queue<GraphNode> Q = new Queue<GraphNode>();
@@ -216,12 +218,16 @@ public class TileMap : MonoBehaviour {
             TraverseOrder.Enqueue(g);
 
             if (g == to)
+            {
+                print("Found dest");
                 return TraverseOrder;
+            }
+                
 
             foreach(Edge e in g.Edges)
             {
                 GraphNode gN = e.GetOpposite(g);
-                if (!S.Contains(gN))
+                if (!S.Contains(gN) && !gN.Sinked)
                 {
                     Q.Enqueue(gN);
                     S.Add(gN);

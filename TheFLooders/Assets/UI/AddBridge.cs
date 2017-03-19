@@ -41,6 +41,10 @@ public class AddBridge : MonoBehaviour {
             nwBrige.AddComponent<PlaceBridge>();
 
             TextBinding.DisableButtons();
+			AudioSource asource = GetComponent <AudioSource> ();
+			if (asource != null) {
+				asource.Play();
+			}
         }
     }
 }

@@ -8,7 +8,7 @@ public class Octree {
 
     public Octree()
     {
-        _root = new OctreeNode();
+        
     }
 
 }

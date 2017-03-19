@@ -8,8 +8,8 @@ using UnityEngine;
 /// </summary>
 public class Edge {
 
-    private GraphNode _node1;
-    private GraphNode _node2;
+    public GraphNode Node1;
+    public GraphNode Node2;
 
     /// <summary>
     /// Cost of this edge, might be useless
@@ -18,10 +18,24 @@ public class Edge {
 
     public Edge(GraphNode node1 = null, GraphNode node2 = null)
     {
-        _node1 = node1;
-        _node2 = node2;
+        Node1 = node1;
+        Node2 = node2;
+
+        Node1.AddEge(this);
+        Node2.AddEge(this);
     }
 
-    
+    /// <summary>
+    /// Called when two graph nodes are not connected together
+    /// </summary>
+    public void BreakEdge()
+    {
+        Node1.RemoveEdge(this);
+        Node2.RemoveEdge(this);
+    }
 
+    public GraphNode GetOpposite(GraphNode from)
+    {
+        return from == Node1 ? Node2 : Node1;
+    }
 }

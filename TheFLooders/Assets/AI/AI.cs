@@ -7,7 +7,9 @@ public class AI : MonoBehaviour {
     private Octree _octree;
 
     //
-    public int NumberOfNodes;
+    public int NodeRows;
+
+    public int NodeColumns;
 
 	// Use this for initialization
 	void Start () {
@@ -26,6 +28,12 @@ public class AI : MonoBehaviour {
     /// </summary>
     void Generate()
     {
+        for(int z = 0 ; z < NodeRows; z++)
+        {
+            for(int x = 0;  x < NodeColumns; x++)
+            {
 
+            }
+        }
     }
 }

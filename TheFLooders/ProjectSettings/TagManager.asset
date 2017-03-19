@@ -6,6 +6,8 @@ TagManager:
   tags:
   - ModifierButton
   - Mountain
+  - objectifGauche
+  - objectifDroit
   - Churl
   - City
   - CityDestroyed
@@ -19,6 +21,7 @@ TagManager:
   - UI
   - 
   - 
+  - Character
   - NoPhysics
   - 
   - 

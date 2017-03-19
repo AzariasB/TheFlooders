@@ -94,6 +94,7 @@
     <Compile Include="Assets\Logic\LevelInfo.cs" />
     <Compile Include="Assets\Logic\PlayerController.cs" />
     <Compile Include="Assets\Logic\SpeedReducer.cs" />
+    <Compile Include="Assets\NavigationAgent.cs" />
     <Compile Include="Assets\NukeTerrain.cs" />
     <Compile Include="Assets\Scripts\Attraction.cs" />
     <Compile Include="Assets\Scripts\GlissementPieton.cs" />
@@ -118,8 +119,7 @@
     <Compile Include="Assets\Water\TranspaSlide.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\RAIN\Editor\ScriptTemplates\BehaviorTreeTemplate.xml" />
-    <None Include="Assets\RAIN\Editor\Shaders\RAINShader.shader" />
+    <None Include="Assets\AI\BehaviorTrees\AI_test.txt" />
     <None Include="Assets\Terrain\TerrainIsoMap.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

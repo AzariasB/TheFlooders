@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class AI : MonoBehaviour {
 
+    public float StartTime;
+
+    private float _currentTime;
+
     public float CloseDistance;
 
     private GraphNode _finalTarget;
@@ -16,7 +20,10 @@ public class AI : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         TileMap tm = GameObject.Find("TileMap").GetComponent<TileMap>();
-        _finalTarget = tm.GetNodeAtCoords(LevelInfo.Instance.Destination.x, LevelInfo.Instance.Destination.z);
+
+
+        _finalTarget = tm.GetNodeAtCoords(20, -80);
+       // print(string.Format("Arrival at  x : {0} y : {1}", LevelInfo.Instance.Destination.x, LevelInfo.Instance.Destination.y));
 
         Recaculate();
 
@@ -29,7 +36,7 @@ public class AI : MonoBehaviour {
     {
         foreach(GraphNode g in _path)
         {
-            g.DebugTrace();
+            //g.DebugTrace();
         }
     }
 
@@ -42,7 +49,6 @@ public class AI : MonoBehaviour {
 
     public void Recaculate()
     {
-        print("Recalculation");
         TileMap tm = GameObject.Find("TileMap").GetComponent<TileMap>();
         GraphNode currentPosition = tm.GetNodeAtCoords(gameObject.transform.position.x, gameObject.transform.position.z);
 
@@ -79,9 +85,8 @@ public class AI : MonoBehaviour {
 
         //Ray ray = Camera.main.ScreenPointToRay(mNode.Position);
         rayCast = Physics.Raycast(origin, direction, out hitPoint, Mathf.Infinity);
-        if (rayCast && hitPoint.collider.gameObject.name != "HeightMap")//Can't see it => underwater
+        if (rayCast && hitPoint.collider.gameObject.name != "Terrain generator")//Can't see it => underwater
         {
-            print(hitPoint.collider.gameObject.name);
             return true;
         }
         return false;
@@ -92,22 +97,29 @@ public class AI : MonoBehaviour {
         if (IsDying())
         {
             //Dying sound
+            print("die");
             Destroy(gameObject);
             return;
         }
 
-        if (CloseEnough())
+        if(_currentTime < StartTime)
         {
-            NextTarget();
-        }
-        else if(_currentTarget != null)
+            _currentTime += Time.deltaTime;
+        }else
         {
-            Vector3 mPos = gameObject.transform.position;
-            Vector3 flatTarget = new Vector3(_currentTarget.Position.x, 0, _currentTarget.Position.z);
-            Vector3 flatPos = new Vector3(mPos.x, 0, mPos.z);
-            Vector3 direction =  flatTarget - flatPos;
-            //Divide ... ?
-            GetComponent<Rigidbody>().velocity = direction;
+            if (CloseEnough())
+            {
+                NextTarget();
+            }
+            else if (_currentTarget != null)
+            {
+                Vector3 mPos = gameObject.transform.position;
+                Vector3 flatTarget = new Vector3(_currentTarget.Position.x, 0, _currentTarget.Position.z);
+                Vector3 flatPos = new Vector3(mPos.x, 0, mPos.z);
+                Vector3 direction = flatTarget - flatPos;
+                //Divide ... ?
+                GetComponent<Rigidbody>().velocity = direction;
+            }
         }
 	}
 

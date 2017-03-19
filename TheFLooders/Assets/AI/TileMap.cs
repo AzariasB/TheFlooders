@@ -29,7 +29,7 @@ public class TileMap : MonoBehaviour {
             _nodes[i] = new GraphNode[NodeColumns];
         }
 
-        TerrainHeightMap heightMap = GameObject.Find("HeightMap").GetComponent<TerrainHeightMap>();
+        TerrainHeightMap heightMap = GameObject.Find("Terrain generator").GetComponent<TerrainHeightMap>();
 
 
         _mapWidth = heightMap.Width;
@@ -74,7 +74,7 @@ public class TileMap : MonoBehaviour {
     private void CheckBase()
     {
         Material redMat = Resources.Load("RedMaterial", typeof(Material)) as Material;
-        FloodControl Control = GameObject.Find("Flood wave control").GetComponent<FloodControl>();
+        FloodControl Control = GameObject.Find("Flood water mover").GetComponent<FloodControl>();
 
         float waterHeight = Control.stillWaterPlane.transform.position.y;
 
@@ -153,7 +153,7 @@ public class TileMap : MonoBehaviour {
 
     void Update()
     {
-        FloodControl Control = GameObject.Find("Flood wave control").GetComponent<FloodControl>();
+        FloodControl Control = GameObject.Find("Flood water mover").GetComponent<FloodControl>();
         float waterHeight = Control.stillWaterPlane.transform.position.y;
         //Shows all the nodes
         for (int z = 0; z < NodeRows; z++)
@@ -204,6 +204,8 @@ public class TileMap : MonoBehaviour {
 
     public Queue<GraphNode> GetPath(GraphNode from, GraphNode to)
     {
+
+        to.DebugTrace("Arrival");
         Queue<GraphNode> TraverseOrder = new Queue<GraphNode>();
 
         Queue<GraphNode> Q = new Queue<GraphNode>();

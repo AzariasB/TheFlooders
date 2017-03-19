@@ -62,22 +62,21 @@ public class GraphNode {
         }
     }
 
-    public void DebugTrace(Material mat = null)
+    public void DebugTrace(string name = "")
     {
-        //Material greenMat = Resources.Load("RedMaterial", typeof(Material)) as Material;
-        //Material redMat = Resources.Load("GreenMaterial", typeof(Material)) as Material;
+        Material greenMat = Resources.Load("RedMaterial", typeof(Material)) as Material;
+        Material redMat = Resources.Load("GreenMaterial", typeof(Material)) as Material;
 
-        //GameObject debug = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        //GameObject.Destroy(debug.GetComponent<SphereCollider>());
-        //debug.layer = LayerMask.NameToLayer("Ignore Raycast");
-        //debug.transform.position = Position;
-        //if (mat != null)
-        //    debug.GetComponent<Renderer>().material = mat;
-        //else
-        //{
-        //    debug.GetComponent<Renderer>().material = Sinked ? redMat : greenMat;
-        //}
-        //Debug.Log(string.Format("x : {0} z : {1}", Position.x, Position.z));
+        GameObject debug = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+        if(!string.IsNullOrEmpty(name) )
+            debug.name = name;
+
+        GameObject.Destroy(debug.GetComponent<SphereCollider>());
+        debug.layer = LayerMask.NameToLayer("Ignore Raycast");
+        debug.transform.position = Position;
+        debug.GetComponent<Renderer>().material = Sinked ? redMat : greenMat;
+        Debug.Log(string.Format("x : {0} z : {1}", Position.x, Position.z));
     }
 
 }

@@ -117,9 +117,12 @@
     <Compile Include="Assets\UI\TextBinding.cs" />
     <Compile Include="Assets\Water\FloodControl.cs" />
     <Compile Include="Assets\Water\TranspaSlide.cs" />
+    <Compile Include="Assets\helico.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\AI\BehaviorTrees\AI_test.txt" />
+    <None Include="Assets\RAIN\Editor\ScriptTemplates\BehaviorTreeTemplate.xml" />
+    <None Include="Assets\RAIN\Editor\Shaders\RAINShader.shader" />
     <None Include="Assets\Terrain\TerrainIsoMap.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

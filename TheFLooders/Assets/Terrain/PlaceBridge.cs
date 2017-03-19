@@ -32,6 +32,33 @@ public class PlaceBridge : MonoBehaviour {
                     gameObject.layer = LayerMask.NameToLayer("Default");
                     (GameObject.Find("bridge_text").GetComponent<TextBinding>() as TextBinding).Decrement();
                     TextBinding.EnableButtons();
+
+                    //Update Graph
+                    Vector3 size = GetComponent<Renderer>().bounds.size;
+                    Vector3 mPos = transform.position;
+                    Vector3 extremity1 = new Vector3(mPos.x + size.x/2, 0, mPos.z + size.z/2);
+                    Vector3 extremity2 = new Vector3(mPos.x - size.x / 2, 0, mPos.z - size.z / 2);
+
+                    TileMap tm = GameObject.Find("TileMap").GetComponent<TileMap>();
+                    GraphNode g1 = tm.GetNodeAtCoords(extremity1.x, extremity1.z);
+                    GraphNode g2 = tm.GetNodeAtCoords(extremity2.x, extremity2.z);
+                    if(g1 != null && g2 != null && !g1.Sinked && !g2.Sinked)
+                    {
+                        Edge bridgeEdge = new Edge(g1, g2);
+                    }else
+                    {
+
+                        g1.DebugTrace();
+                        g2.DebugTrace();
+                        Debug.LogError("Failed to create bridge edge");
+                    }
+                        
+                    //Tick AI
+                    foreach(AI mAI in GameObject.FindObjectsOfType<AI>())
+                    {
+                        print("Adding edge");
+                        mAI.Recaculate();
+                    }
                 }
 
             }

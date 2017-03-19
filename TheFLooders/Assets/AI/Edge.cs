@@ -21,8 +21,11 @@ public class Edge {
         Node1 = node1;
         Node2 = node2;
 
-        Node1.AddEge(this);
-        Node2.AddEge(this);
+        if(Node1 != null)
+            Node1.AddEge(this);
+
+        if(Node2 != null)
+            Node2.AddEge(this);
     }
 
     /// <summary>

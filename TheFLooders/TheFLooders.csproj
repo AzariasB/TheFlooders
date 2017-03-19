@@ -88,6 +88,7 @@
     <Compile Include="Assets\AI\Octree.cs" />
     <Compile Include="Assets\AI\OctreeNode.cs" />
     <Compile Include="Assets\AI\TileMap.cs" />
+    <Compile Include="Assets\Intro\IntroductionScreen.cs" />
     <Compile Include="Assets\Logic\CameraMove.cs" />
     <Compile Include="Assets\Logic\Drag.cs" />
     <Compile Include="Assets\Logic\LevelInfo.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Assets\Scripts\Attraction.cs" />
     <Compile Include="Assets\Scripts\GlissementPieton.cs" />
     <Compile Include="Assets\Scripts\MovementPieton.cs" />
+    <Compile Include="Assets\StartMovie.cs" />
     <Compile Include="Assets\Terrain\Churl.cs" />
     <Compile Include="Assets\Terrain\PlaceBridge.cs" />
     <Compile Include="Assets\Terrain\PlaceClay.cs" />

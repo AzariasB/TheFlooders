@@ -23,7 +23,6 @@ public class TileMap : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-        print("start");
         _nodes = new GraphNode[NodeRows][];
         for(int i = 0; i < NodeRows; i++)
         {
@@ -78,6 +77,7 @@ public class TileMap : MonoBehaviour {
         FloodControl Control = GameObject.Find("Flood wave control").GetComponent<FloodControl>();
 
         float waterHeight = Control.stillWaterPlane.transform.position.y;
+
 
         //Shows all the nodes
         for (int z = 0; z < NodeRows; z++)
@@ -216,12 +216,16 @@ public class TileMap : MonoBehaviour {
             TraverseOrder.Enqueue(g);
 
             if (g == to)
+            {
+                print("Found dest");
                 return TraverseOrder;
+            }
+                
 
             foreach(Edge e in g.Edges)
             {
                 GraphNode gN = e.GetOpposite(g);
-                if (!S.Contains(gN))
+                if (!S.Contains(gN) && !gN.Sinked)
                 {
                     Q.Enqueue(gN);
                     S.Add(gN);

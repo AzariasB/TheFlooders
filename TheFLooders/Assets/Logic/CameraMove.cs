@@ -54,6 +54,7 @@ namespace AssemblyCSharp {
                 } else {
                     transform.position = _targetPosition;
                     enabled = false;
+					LevelInfo.Instance.iscompleted = true;
                 }
             }
         }

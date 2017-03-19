@@ -31,6 +31,8 @@ public class LevelInfo : MonoBehaviour {
     [Tooltip("Temps à partir duquel la caméra commence à bouger")]
     public float _startDelay = 3;
 
+	public bool iscompleted;
+
     public static LevelInfo Instance {
         get {
             return _instance;

@@ -20,6 +20,12 @@ public class TextBinding : MonoBehaviour {
         BindText();
     }
 
+    public void Increment()
+    {
+        Count++;
+        BindText();
+    }
+
     public bool CanDecrement()
     {
         return Count > 0;

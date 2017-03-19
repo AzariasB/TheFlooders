@@ -120,6 +120,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\AI\BehaviorTrees\AI_test.txt" />
+    <None Include="Assets\RAIN\Editor\ScriptTemplates\BehaviorTreeTemplate.xml" />
+    <None Include="Assets\RAIN\Editor\Shaders\RAINShader.shader" />
     <None Include="Assets\Terrain\TerrainIsoMap.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

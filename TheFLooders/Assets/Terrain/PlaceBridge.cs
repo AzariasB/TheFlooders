@@ -48,8 +48,8 @@ public class PlaceBridge : MonoBehaviour {
                     }else
                     {
 
-                        g1.DebugTrace();
-                        g2.DebugTrace();
+                       // g1.DebugTrace();
+                        //g2.DebugTrace();
                         Debug.LogError("Failed to create bridge edge");
                     }
                         

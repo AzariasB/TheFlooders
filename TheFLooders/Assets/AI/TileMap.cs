@@ -204,6 +204,8 @@ public class TileMap : MonoBehaviour {
 
     public Queue<GraphNode> GetPath(GraphNode from, GraphNode to)
     {
+
+        to.DebugTrace("Arrival");
         Queue<GraphNode> TraverseOrder = new Queue<GraphNode>();
 
         Queue<GraphNode> Q = new Queue<GraphNode>();

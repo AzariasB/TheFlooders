@@ -16,7 +16,10 @@ public class AI : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         TileMap tm = GameObject.Find("TileMap").GetComponent<TileMap>();
-        _finalTarget = tm.GetNodeAtCoords(LevelInfo.Instance.Destination.x, LevelInfo.Instance.Destination.z);
+
+
+        _finalTarget = tm.GetNodeAtCoords(20, -80);
+       // print(string.Format("Arrival at  x : {0} y : {1}", LevelInfo.Instance.Destination.x, LevelInfo.Instance.Destination.y));
 
         Recaculate();
 
@@ -29,7 +32,7 @@ public class AI : MonoBehaviour {
     {
         foreach(GraphNode g in _path)
         {
-            g.DebugTrace();
+            //g.DebugTrace();
         }
     }
 
@@ -42,7 +45,6 @@ public class AI : MonoBehaviour {
 
     public void Recaculate()
     {
-        print("Recalculation");
         TileMap tm = GameObject.Find("TileMap").GetComponent<TileMap>();
         GraphNode currentPosition = tm.GetNodeAtCoords(gameObject.transform.position.x, gameObject.transform.position.z);
 
@@ -81,7 +83,6 @@ public class AI : MonoBehaviour {
         rayCast = Physics.Raycast(origin, direction, out hitPoint, Mathf.Infinity);
         if (rayCast && hitPoint.collider.gameObject.name != "HeightMap")//Can't see it => underwater
         {
-            print(hitPoint.collider.gameObject.name);
             return true;
         }
         return false;

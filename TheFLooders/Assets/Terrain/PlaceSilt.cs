@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlaceClay : MonoBehaviour {
+/// <summary>
+/// Place silt
+/// </summary>
+public class PlaceSilt : MonoBehaviour {
+
 
     public bool Placed { get; set; }
 
     // Use this for initialization
-    void Start()
-    {
+    void Start () {
         Placed = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+	}
+	
+	// Update is called once per frame
+	void Update () {
         if (!Placed)
         {
             bool rayCast;
@@ -27,12 +29,10 @@ public class PlaceClay : MonoBehaviour {
                 if (Placed)
                 {
                     //Change layer
-                    (GameObject.Find("clay_text").GetComponent<TextBinding>() as TextBinding).Decrement();
+                    (GameObject.Find("siltText").GetComponent<TextBinding>() as TextBinding).Decrement();
                     transform.position += new Vector3(0, 0.5f, 0);
-                    //Add the collider now, to slow the player down
-                    gameObject.AddComponent<BoxCollider>();
-                    (gameObject.GetComponent<BoxCollider>() as BoxCollider).isTrigger = true;
-                    (gameObject.AddComponent<SpeedReducer>() as SpeedReducer).DragDivisor = 0.1f;
+
+
                     TextBinding.EnableButtons();
                 }
 

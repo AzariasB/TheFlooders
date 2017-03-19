@@ -29,17 +29,9 @@ public class AddMountain : MonoBehaviour {
                 nwObj.gameObject.tag = "Mountain";
                 nwObj.layer = LayerMask.NameToLayer("Ignore Raycast");
                 nwObj.AddComponent<PlaceMountain>();
+                Destroy(nwObj.GetComponent<Collider>());
 
-                GameObject[] objects = GameObject.FindGameObjectsWithTag("ModifierButton");
-                foreach (GameObject obj in objects)
-                {
-                    (obj.GetComponent<Button>() as Button).interactable = false;
-                }
-
-                foreach (GameObject obj in objects)
-                {
-                    print((obj.GetComponent<Button>() as Button).interactable);
-                }
+                TextBinding.DisableButtons();
             }
         }
     }

@@ -31,13 +31,7 @@ public class PlaceBridge : MonoBehaviour {
                     //Change layer
                     gameObject.layer = LayerMask.NameToLayer("Default");
                     (GameObject.Find("bridge_text").GetComponent<TextBinding>() as TextBinding).Decrement();
-
-
-                    GameObject[] buttons = GameObject.FindGameObjectsWithTag("ModifierButton");
-                    foreach (GameObject button in buttons)
-                    {
-                        (button.GetComponent<Button>() as Button).interactable = true;
-                    }
+                    TextBinding.EnableButtons();
                 }
 
             }
@@ -45,10 +39,11 @@ public class PlaceBridge : MonoBehaviour {
             {
                 //Cancel
                 Destroy(gameObject);
+                TextBinding.DisableButtons();
             }
             else
             {
-                transform.position = (hitPoint.point + new Vector3(0 , 1, 0) );
+                transform.position = hitPoint.point;
             }
         }
     }

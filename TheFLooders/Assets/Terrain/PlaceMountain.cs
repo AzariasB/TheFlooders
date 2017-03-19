@@ -35,12 +35,7 @@ public class PlaceMountain : MonoBehaviour {
                     //Change layer
                     gameObject.layer = LayerMask.NameToLayer("Default");
                     (GameObject.Find("mountain_text").GetComponent<TextBinding>() as TextBinding).Decrement();
-
-                    GameObject[] buttons = GameObject.FindGameObjectsWithTag("ModifierButton");
-                    foreach (GameObject button in buttons)
-                    {
-                        (button.GetComponent<Button>() as Button).interactable = true;
-                    }
+                    TextBinding.EnableButtons();
                 }
 
                 //Decrement number of mountains
@@ -49,6 +44,7 @@ public class PlaceMountain : MonoBehaviour {
             {
                 //Cancel
                 Destroy(gameObject);
+                TextBinding.EnableButtons();
             }
             else
             {

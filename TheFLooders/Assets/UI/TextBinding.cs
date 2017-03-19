@@ -36,4 +36,22 @@ public class TextBinding : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public static void EnableButtons()
+    {
+        GameObject[] buttons = GameObject.FindGameObjectsWithTag("ModifierButton");
+        foreach (GameObject button in buttons)
+        {
+            (button.GetComponent<Button>() as Button).interactable = true;
+        }
+    }
+
+    public static void DisableButtons()
+    {
+        GameObject[] buttons = GameObject.FindGameObjectsWithTag("ModifierButton");
+        foreach (GameObject button in buttons)
+        {
+            (button.GetComponent<Button>() as Button).interactable = false;
+        }
+    }
 }

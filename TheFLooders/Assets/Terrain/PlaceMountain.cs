@@ -32,6 +32,14 @@ public class PlaceMountain : MonoBehaviour {
                 Placed = rayCast;
                 if (Placed)
                 {
+                    // Raise terrain
+                    LevelInfo info =LevelInfo.Instance;
+                    if (info != null && info.HeightMap != null) {
+                        info.HeightMap.CreateMountaintOrHole(new Vector2(hitPoint.point.x, hitPoint.point.z), 30, 35);
+                    } else {
+                        Debug.LogWarning ("Le terrain n'a pas été trouvé");
+                    }
+
                     //Change layer
                     gameObject.layer = LayerMask.NameToLayer("Default");
                     gameObject.transform.position += new Vector3(0, 0.5f, 0);

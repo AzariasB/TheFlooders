@@ -38,4 +38,9 @@ public class Edge {
     {
         return from == Node1 ? Node2 : Node1;
     }
+
+    public bool IsNode1(GraphNode node)
+    {
+        return node == Node1;
+    }
 }

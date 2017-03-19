@@ -116,9 +116,9 @@ public class TerrainHeightMap : MonoBehaviour
         int nCols = _heightData.Length;
         int nRows = _heightData [0].Length;
         int colIndexMin = Mathf.CeilToInt(Mathf.Clamp((targetZone.xMin + Width / 2) / Width * (nCols -1), 0, nCols-1));
-        int colIndexMax = (int) ((Width / 2 - targetZone.xMax) / Width * (nCols -1));
+        int colIndexMax = (int) Mathf.Clamp((targetZone.xMax + Width / 2) / Width * (nCols -1), 0, nCols-1);
         int rowIndexMin = Mathf.CeilToInt(Mathf.Clamp((targetZone.yMin + Height / 2) / Height * (nRows -1), 0, nRows-1));
-        int rowIndexMax = (int) ((Height / 2 - targetZone.yMax) / Height * (nRows -1));
+        int rowIndexMax = (int) Mathf.Clamp((targetZone.yMax + Height / 2) / Height * (nRows -1), 0, nRows-1);
         if (colIndexMax < colIndexMin || rowIndexMax < rowIndexMin)
             return;
 
@@ -152,7 +152,7 @@ public class TerrainHeightMap : MonoBehaviour
         }
 
         // Recalcul du mesh.
-        RecomputeSamples();
+        ApplyHeightData();
     }
 
     /// <summary>
@@ -166,7 +166,7 @@ public class TerrainHeightMap : MonoBehaviour
         _heightData = null;
 
         // test de validité
-        if (IsEmpty()) {
+        if (IsEmpty ()) {
             return;
         }
 
@@ -214,6 +214,13 @@ public class TerrainHeightMap : MonoBehaviour
             }
         }
 
+        ApplyHeightData ();
+    }
+
+    private void ApplyHeightData() {
+        int nSubdivX = _heightData.Length -1;
+        int nSubdivY = _heightData[0].Length -1;
+
         // Transformation en vertex
         Vector3[] vertices = new Vector3[(nSubdivX + 1) * (nSubdivY + 1)];
         for (int colIdx = 0; colIdx <= nSubdivX; colIdx++) {
@@ -224,14 +231,11 @@ public class TerrainHeightMap : MonoBehaviour
                 vertices [vertexIdx] = new Vector3 (x, _heightData [colIdx] [rowIdx], z);
             }
         }
-
         // Remplissage des sommets du mesh
         HeightMapMesh.vertices = vertices;
 
-        // Recalcul des triangles et UV si nécessaire
-        if (sizeChanged) {
-            RebuildTrianglesAndUVs(nSubdivX, nSubdivY);
-        }
+        // Recalcul des triangles et UV
+        RebuildTrianglesAndUVs(nSubdivX, nSubdivY);
 
         if (TargetMeshFilter != null)
             TargetMeshFilter.mesh = HeightMapMesh;
@@ -244,21 +248,6 @@ public class TerrainHeightMap : MonoBehaviour
             _heightMapTexture == null || _heightMapTexture.width <= 0 ||
             _heightMapTexture.height <= 0 ||
             _width <= 0 || _minSubdivisions < 1);
-    }
-
-    private void RebuildTrianglesAndUVs() {
-        int nSubdivX = 0;
-        int nSubdivY = 0;
-        if (_width > 0 && Height > 0 && _minSubdivisions >= 1) {
-            if (_width > Height && Height > 0) {
-                nSubdivY = _minSubdivisions;
-                nSubdivX = Mathf.CeilToInt (_width / Height * _minSubdivisions);
-            } else {
-                nSubdivX = _minSubdivisions;
-                nSubdivY = Mathf.CeilToInt (Height / _width * _minSubdivisions);
-            }
-        }
-        RebuildTrianglesAndUVs(nSubdivX, nSubdivY);
     }
 
     private void RebuildTrianglesAndUVs(int nSubdivX, int nSubdivY) {

@@ -26,7 +26,7 @@ public class PlaceMountain : MonoBehaviour {
             bool rayCast;
             RaycastHit hitPoint;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            rayCast = Physics.Raycast(ray, out hitPoint, 100.0f);
+            rayCast = Physics.Raycast(ray, out hitPoint, 10000.0f);
             if (Input.GetMouseButtonDown(0))
             {
                 Placed = rayCast;
@@ -34,6 +34,9 @@ public class PlaceMountain : MonoBehaviour {
                 {
                     //Change layer
                     gameObject.layer = LayerMask.NameToLayer("Default");
+                    gameObject.transform.position += new Vector3(0, 0.5f, 0);
+                    (gameObject.AddComponent<BoxCollider>() as BoxCollider).isTrigger = true;
+                    (gameObject.AddComponent<SpeedReducer>() as SpeedReducer).DragDivisor = 5;
                     (GameObject.Find("mountain_text").GetComponent<TextBinding>() as TextBinding).Decrement();
                     TextBinding.EnableButtons();
                 }

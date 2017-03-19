@@ -2,42 +2,60 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMove : MonoBehaviour {
+namespace AssemblyCSharp {
+    public class CameraMove : MonoBehaviour {
 
-    private bool _started = false;
+        [Tooltip("Le terrain par rapport le long duquel cette caméra doit défiler.")]
+        public TerrainHeightMap targetTerrain;
 
-    public float TimeStart;
+        [Tooltip("La caméra du niveau, dont la taille sera configurée")]
+        public Camera targetCamera;
 
-    public int Speed;
+        private Vector3 _targetPosition;
+        private float _accumulatedTime;
 
-    public int MinValue;
+        // Use this for initialization
+        void Start () {
+            if (targetTerrain == null) {
+                Debug.LogError ("Terrain cible manquant");
+                return;
+            }
+            if (targetCamera == null) {
+                Debug.LogError ("Caméra manquante");
+                return;
+            }
 
-    private float _currentTime;
+            if (targetTerrain != null) {
+                // Config de la taille de la caméra
+                float desiredCamHeight = targetTerrain.Width * Screen.height / Screen.width;
+                targetCamera.orthographic = true;
+                targetCamera.orthographicSize = desiredCamHeight / 2;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if(_started)
-        {
+                // Positionnement de la caméra
+                transform.parent = targetTerrain.transform;
+                transform.localPosition = new Vector3 (0, 100, (targetTerrain.Height - desiredCamHeight) / 2);
 
-            gameObject.transform.position += new Vector3(0, 0, -Speed * Time.deltaTime);
-            if(gameObject.transform.position.z < MinValue)
-            {
-                //No need to move anymore
-                Destroy(gameObject.GetComponent<CameraMove>());
+                // Calcul de la vitesse de translation future
+                _targetPosition = new Vector3 (0, 100, (- targetTerrain.Height + desiredCamHeight) / 2);
             }
         }
-        else
-        {
-            _currentTime += Time.deltaTime;
-            if(_currentTime >= TimeStart)
-            {
-                _started = true;
+
+        // Update is called once per frame
+        void Update () {
+            _accumulatedTime += Time.deltaTime;
+            if (_accumulatedTime > LevelInfo.Instance.StartDelay) {
+                if (_accumulatedTime - LevelInfo.Instance.StartDelay < LevelInfo.Instance.LevelDuration) {
+                    float remainingTime = LevelInfo.Instance.LevelDuration - (_accumulatedTime - LevelInfo.Instance.StartDelay);
+                    Vector3 direction = (_targetPosition - transform.position).normalized;
+                    float speed = 0;
+                    if (remainingTime != 0)
+                        speed =(_targetPosition - transform.position).magnitude / remainingTime;
+                    transform.Translate(direction * speed * Time.deltaTime);
+                } else {
+                    transform.position = _targetPosition;
+                    enabled = false;
+                }
             }
         }
-	}
+    }
 }

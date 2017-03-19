@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class AI : MonoBehaviour {
 
+    public float StartTime;
+
+    private float _currentTime;
+
     public float CloseDistance;
 
     private GraphNode _finalTarget;
@@ -81,7 +85,7 @@ public class AI : MonoBehaviour {
 
         //Ray ray = Camera.main.ScreenPointToRay(mNode.Position);
         rayCast = Physics.Raycast(origin, direction, out hitPoint, Mathf.Infinity);
-        if (rayCast && hitPoint.collider.gameObject.name != "HeightMap")//Can't see it => underwater
+        if (rayCast && hitPoint.collider.gameObject.name != "Terrain generator")//Can't see it => underwater
         {
             return true;
         }
@@ -93,22 +97,29 @@ public class AI : MonoBehaviour {
         if (IsDying())
         {
             //Dying sound
+            print("die");
             Destroy(gameObject);
             return;
         }
 
-        if (CloseEnough())
+        if(_currentTime < StartTime)
         {
-            NextTarget();
-        }
-        else if(_currentTarget != null)
+            _currentTime += Time.deltaTime;
+        }else
         {
-            Vector3 mPos = gameObject.transform.position;
-            Vector3 flatTarget = new Vector3(_currentTarget.Position.x, 0, _currentTarget.Position.z);
-            Vector3 flatPos = new Vector3(mPos.x, 0, mPos.z);
-            Vector3 direction =  flatTarget - flatPos;
-            //Divide ... ?
-            GetComponent<Rigidbody>().velocity = direction;
+            if (CloseEnough())
+            {
+                NextTarget();
+            }
+            else if (_currentTarget != null)
+            {
+                Vector3 mPos = gameObject.transform.position;
+                Vector3 flatTarget = new Vector3(_currentTarget.Position.x, 0, _currentTarget.Position.z);
+                Vector3 flatPos = new Vector3(mPos.x, 0, mPos.z);
+                Vector3 direction = flatTarget - flatPos;
+                //Divide ... ?
+                GetComponent<Rigidbody>().velocity = direction;
+            }
         }
 	}
 

@@ -117,6 +117,7 @@
     <Compile Include="Assets\UI\TextBinding.cs" />
     <Compile Include="Assets\Water\FloodControl.cs" />
     <Compile Include="Assets\Water\TranspaSlide.cs" />
+    <Compile Include="Assets\helico.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\AI\BehaviorTrees\AI_test.txt" />

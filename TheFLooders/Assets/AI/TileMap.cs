@@ -24,11 +24,11 @@ public class TileMap : MonoBehaviour {
         float Width = heightMap.Width;
         float Height = heightMap.Height;
 
-        float startX = -(Width / 2);
-        float startZ = -(Height / 2);
+        float xSteps = Width / (NodeColumns);
+        float zSteps = Height / (NodeRows);
 
-        float xSteps = Width / (NodeColumns-1);
-        float zSteps = Height / (NodeRows - 1);
+        float startX = -(Width / 2) + (xSteps / 2);
+        float startZ = -(Height / 2) + (zSteps / 2);
 
         //Create nodes
         for (int z = 0; z < NodeRows;z++)
@@ -80,13 +80,10 @@ public class TileMap : MonoBehaviour {
                     if(mNode.Position.y <= waterHeight)
                     {
                         nwSphere.GetComponent<Renderer>().material = redMat;
-                    }
-
-                    foreach(Edge e in mNode.Edges)
-                    {
-                        if (e.IsNode1(mNode))
+                        mNode.Sinked = true;
+                        for(int i = mNode.Edges.Count - 1; i >= 0; i--)
                         {
-                            Debug.DrawLine(mNode.Position, e.Node2.Position, Color.green, 1000);
+                            mNode.Edges[i].BreakEdge();
                         }
                     }
 
@@ -146,6 +143,38 @@ public class TileMap : MonoBehaviour {
 
     void Update()
     {
+        FloodControl Control = GameObject.Find("Flood wave control").GetComponent<FloodControl>();
+        float waterHeight = Control.stillWaterPlane.transform.position.y;
+        //Shows all the nodes
+        for (int z = 0; z < NodeRows; z++)
+        {
+            for (int x = 0; x < NodeColumns; x++)
+            {
 
+
+                GraphNode mNode = _nodes[z][x];
+                if (mNode != null)
+                {
+                    foreach (Edge e in mNode.Edges)
+                    {
+                        if (e.IsNode1(mNode))
+                        {
+                            Debug.DrawLine(mNode.Position, e.Node2.Position, Color.green);
+                        }
+                    }
+
+                    //bool rayCast;
+                    //RaycastHit hitPoint;
+                    //Ray ray = Camera.main.ScreenPointToRay(mNode.Position);
+                    //rayCast = Physics.Raycast(ray, out hitPoint, 10000.0f);
+                    //if (rayCast)//Can't see it => underwater
+                    //{
+                    //    nwSphere.GetComponent<Renderer>().material = redMat;
+                    //}
+                }
+
+
+            }
+        }
     }
 }

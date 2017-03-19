@@ -9,10 +9,10 @@ public class GraphNode {
 
     public Vector3 Position;
 
-    private ICollection<Edge> _edges;
+    private List<Edge> _edges;
 
 
-    public ICollection<Edge> Edges
+    public List<Edge> Edges
     {
         get
         {
@@ -24,7 +24,7 @@ public class GraphNode {
     public GraphNode(Vector3 position)
     {
         Position = position;
-        _edges = new Collection<Edge>();
+        _edges = new List<Edge>();
     }
 
     public void AddEge(Edge nwEdge)

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class AddBridge : MonoBehaviour {
 
 
-    private Vector3 bridgeSize = new Vector3((float)0.5, 1, 2);
+    private Vector3 bridgeSize = new Vector3((float)0.5, 1, 4);
 
 	// Use this for initialization
 	void Start () {

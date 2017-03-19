@@ -1,11 +1,15 @@
 ﻿using System.Collections;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System;
 using UnityEngine;
 
 public class TileMap : MonoBehaviour {
 
     private GraphNode[][] _nodes;
+
+
 
     private float _startX;
     private float _startZ;
@@ -18,7 +22,7 @@ public class TileMap : MonoBehaviour {
     public int NodeColumns;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         _nodes = new GraphNode[NodeRows][];
         for(int i = 0; i < NodeRows; i++)
         {
@@ -73,6 +77,7 @@ public class TileMap : MonoBehaviour {
         FloodControl Control = GameObject.Find("Flood wave control").GetComponent<FloodControl>();
 
         float waterHeight = Control.stillWaterPlane.transform.position.y;
+
 
         //Shows all the nodes
         for (int z = 0; z < NodeRows; z++)
@@ -130,7 +135,7 @@ public class TileMap : MonoBehaviour {
         return x >= 0 && x < NodeColumns && z >= 0 && z < NodeRows;
     }
 
-    GraphNode GetNodeAtCoords(float x, float z)
+    public GraphNode GetNodeAtCoords(float x, float z)
     {
         if (x < _startX || x > _startX + _mapWidth || z < _startZ || z > _startZ + _mapHeight)
             return null; //404 not found
@@ -139,6 +144,7 @@ public class TileMap : MonoBehaviour {
         z -= _startZ;
         int xIndex =  (int)(x / _stepX);
         int zIndex =  (int)(z / _stepZ);
+
         if (xIndex < 0 || xIndex >= NodeColumns || zIndex < 0 || zIndex >= NodeRows)
             return null;
 
@@ -194,5 +200,39 @@ public class TileMap : MonoBehaviour {
 
             }
         }
+    }
+
+    public Queue<GraphNode> GetPath(GraphNode from, GraphNode to)
+    {
+        Queue<GraphNode> TraverseOrder = new Queue<GraphNode>();
+
+        Queue<GraphNode> Q = new Queue<GraphNode>();
+        HashSet<GraphNode> S = new HashSet<GraphNode>();
+
+        Q.Enqueue(from);
+        while(Q.Count > 0)
+        {
+            GraphNode g = Q.Dequeue();
+            TraverseOrder.Enqueue(g);
+
+            if (g == to)
+            {
+                print("Found dest");
+                return TraverseOrder;
+            }
+                
+
+            foreach(Edge e in g.Edges)
+            {
+                GraphNode gN = e.GetOpposite(g);
+                if (!S.Contains(gN) && !gN.Sinked)
+                {
+                    Q.Enqueue(gN);
+                    S.Add(gN);
+                }
+            }
+        }
+
+        return TraverseOrder;
     }
 }

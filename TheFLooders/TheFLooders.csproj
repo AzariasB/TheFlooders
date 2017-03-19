@@ -73,8 +73,17 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="RAINMetaform">
+      <HintPath>Assets\RAIN\RAINMetaform.dll</HintPath>
+    </Reference>
+    <Reference Include="RAIN">
+      <HintPath>Assets\RAIN\RAIN.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Logic\CameraMove.cs" />
+    <Compile Include="Assets\Logic\PlayerController.cs" />
+    <Compile Include="Assets\NavigationAgent.cs" />
     <Compile Include="Assets\Scripts\Attraction.cs" />
     <Compile Include="Assets\Scripts\GlissementPieton.cs" />
     <Compile Include="Assets\Scripts\MovementPieton.cs" />
@@ -82,11 +91,17 @@
     <Compile Include="Assets\Terrain\PlaceBridge.cs" />
     <Compile Include="Assets\Terrain\PlaceMountain.cs" />
     <Compile Include="Assets\Terrain\TerrainHeightMap.cs" />
+    <Compile Include="Assets\TranspaSlide.cs" />
     <Compile Include="Assets\UI\AddBridge.cs" />
     <Compile Include="Assets\UI\AddMountain.cs" />
     <Compile Include="Assets\UI\Game.cs" />
     <Compile Include="Assets\UI\RemoveMountain.cs" />
     <Compile Include="Assets\UI\TextBinding.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\AI\BehaviorTrees\AI_test.txt" />
+    <None Include="Assets\RAIN\Editor\ScriptTemplates\BehaviorTreeTemplate.xml" />
+    <None Include="Assets\RAIN\Editor\Shaders\RAINShader.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

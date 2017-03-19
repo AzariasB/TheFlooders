@@ -36,6 +36,10 @@ public class AddClay : MonoBehaviour {
             Destroy(nwObj.GetComponent<Collider>());
 
             TextBinding.DisableButtons();
+			AudioSource asource = GetComponent <AudioSource> ();
+			if (asource != null) {
+				asource.Play();
+			}
         }
     }
 }

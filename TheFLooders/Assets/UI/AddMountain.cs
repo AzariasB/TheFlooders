@@ -38,6 +38,12 @@ public class AddMountain : MonoBehaviour {
             nwObj.AddComponent<PlaceMountain>();
 
             TextBinding.DisableButtons();
+			AudioSource asource = GetComponent <AudioSource> ();
+			if (asource != null) {
+				asource.Play();
+			}
+
         }
     }
+
 }

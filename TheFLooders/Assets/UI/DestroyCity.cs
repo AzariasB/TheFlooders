@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class DestroyCity : MonoBehaviour {
+	public AudioSource selectionSound;
+	public AudioSource destructionSound;
 
     private bool _isDestroying;
 
@@ -16,7 +18,9 @@ public class DestroyCity : MonoBehaviour {
     public void EndDestroying(GameObject destroyed)
     {
         if(destroyed != null)
-        {
+		{   if (destructionSound != null) {
+				destructionSound.Play();
+			}
             GameObject.Find("cityDestroyText").GetComponent<TextBinding>().Decrement();
         }
         _isDestroying = false;
@@ -29,6 +33,8 @@ public class DestroyCity : MonoBehaviour {
             Destroy(city.GetComponent<ClickChangeMaterial>());
         }
         TextBinding.EnableButtons();
+
+	
     }
 	
 	// Update is called once per frame
@@ -46,6 +52,9 @@ public class DestroyCity : MonoBehaviour {
             _isDestroying = true;
             Material ruinMaterial = Resources.Load("RuinMaterial", typeof(Material)) as Material;
             TextBinding.DisableButtons();
+			if (selectionSound != null) {
+				selectionSound.Play();
+			}
             foreach (GameObject city in GameObject.FindGameObjectsWithTag("City"))
             {
                 city.AddComponent<ClickChangeMaterial>().NwMaterial = ruinMaterial;

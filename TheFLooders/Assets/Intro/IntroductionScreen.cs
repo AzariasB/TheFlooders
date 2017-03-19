@@ -22,7 +22,8 @@ public class IntroductionScreen : MonoBehaviour {
     // Change de scène une fois que la vidéo est terminée.
 	void Update () {
         if (!_movieTex.isPlaying) {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene("Level 1");
+			enabled = false;
         }
 	}
 }

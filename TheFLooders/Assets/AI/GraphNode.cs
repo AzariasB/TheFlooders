@@ -52,5 +52,14 @@ public class GraphNode {
         return false;
     }
 
+    public void Sink()
+    {
+        Sinked = true;
+        for(int i = _edges.Count - 1; i >= 0; i--)
+        {
+            _edges[i].BreakEdge();
+        }
+    }
+
 
 }

@@ -5,17 +5,11 @@ using UnityEngine;
 namespace AssemblyCSharp {
     public class CameraMove : MonoBehaviour {
 
-        [Tooltip("Temps à partir duquel la caméra commence à bouger")]
-        public float moveDelay;
-
         [Tooltip("Le terrain par rapport le long duquel cette caméra doit défiler.")]
         public TerrainHeightMap targetTerrain;
 
         [Tooltip("La caméra du niveau, dont la taille sera configurée")]
         public Camera targetCamera;
-
-        [Tooltip("Temps de trajet de la caméra (durée du niveau) en secondes")]
-        public float travelDuration = 60;
 
         private Vector3 _targetPosition;
         private float _accumulatedTime;
@@ -49,9 +43,9 @@ namespace AssemblyCSharp {
         // Update is called once per frame
         void Update () {
             _accumulatedTime += Time.deltaTime;
-            if (_accumulatedTime > moveDelay) {
-                if (_accumulatedTime - moveDelay < travelDuration) {
-                    float remainingTime = travelDuration - (_accumulatedTime - moveDelay);
+            if (_accumulatedTime > LevelInfo.Instance.StartDelay) {
+                if (_accumulatedTime - LevelInfo.Instance.StartDelay < LevelInfo.Instance.LevelDuration) {
+                    float remainingTime = LevelInfo.Instance.LevelDuration - (_accumulatedTime - LevelInfo.Instance.StartDelay);
                     Vector3 direction = (_targetPosition - transform.position).normalized;
                     float speed = 0;
                     if (remainingTime != 0)

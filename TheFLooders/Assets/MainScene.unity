@@ -571,6 +571,7 @@ GameObject:
   - component: {fileID: 426518574}
   - component: {fileID: 426518573}
   - component: {fileID: 426518572}
+  - component: {fileID: 426518575}
   m_Layer: 5
   m_Name: add_limon
   m_TagString: ModifierButton
@@ -671,6 +672,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 426518570}
+--- !u!114 &426518575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 426518570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b27cc044e3b3a947b9b6f15979144d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &452904403
 Prefab:
   m_ObjectHideFlags: 0
@@ -922,8 +934,9 @@ GameObject:
   - component: {fileID: 577899279}
   - component: {fileID: 577899278}
   - component: {fileID: 577899280}
+  - component: {fileID: 577899281}
   m_Layer: 5
-  m_Name: Text
+  m_Name: siltText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -987,6 +1000,18 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 577899276}
 --- !u!114 &577899280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 577899276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ec5954edfd76554291e8542c7919dab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Count: 5
+--- !u!114 &577899281
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -1733,7 +1758,7 @@ MonoBehaviour:
   moveDelay: 0
   targetTerrain: {fileID: 1364002623}
   targetCamera: {fileID: 2038254508}
-  travelDuration: 60
+  travelDuration: 120
 --- !u!4 &1221999148
 Transform:
   m_ObjectHideFlags: 0
@@ -2465,7 +2490,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1659395871}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.3, y: 55.01, z: 75.1}
+  m_LocalPosition: {x: -8.67, y: 55.01, z: 69.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

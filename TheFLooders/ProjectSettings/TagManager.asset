@@ -9,6 +9,7 @@ TagManager:
   - Churl
   - City
   - CityDestroyed
+  - Silt
   layers:
   - Default
   - TransparentFX

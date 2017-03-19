@@ -22,7 +22,7 @@ public class AI : MonoBehaviour {
         TileMap tm = GameObject.Find("TileMap").GetComponent<TileMap>();
 
 
-        _finalTarget = tm.GetNodeAtCoords(20, -80);
+        _finalTarget = tm.GetNodeAtCoords(30, -80);
        // print(string.Format("Arrival at  x : {0} y : {1}", LevelInfo.Instance.Destination.x, LevelInfo.Instance.Destination.y));
 
         Recaculate();
@@ -45,6 +45,14 @@ public class AI : MonoBehaviour {
         _path.RemoveAt(0);
         if (_path.Count > 0)
             _currentTarget = _path[0];
+
+        if(_currentTarget == _finalTarget)
+        {
+            print("ended");
+            Destroy(gameObject);
+            //Increase survivors
+            GameObject.Find("saved_player_text").GetComponent<TextBinding>().Increment();
+        }
     }
 
     public void Recaculate()

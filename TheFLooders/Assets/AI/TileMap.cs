@@ -74,27 +74,11 @@ public class TileMap : MonoBehaviour {
                 GraphNode mNode = _nodes[z][x];
                 if (mNode != null)
                 {
-                    GameObject nwSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    nwSphere.transform.position = mNode.Position;
-
                     if(mNode.Position.y <= waterHeight)
                     {
-                        nwSphere.GetComponent<Renderer>().material = redMat;
+                        mNode.Sink();
                         mNode.Sinked = true;
-                        for(int i = mNode.Edges.Count - 1; i >= 0; i--)
-                        {
-                            mNode.Edges[i].BreakEdge();
-                        }
                     }
-
-                    //bool rayCast;
-                    //RaycastHit hitPoint;
-                    //Ray ray = Camera.main.ScreenPointToRay(mNode.Position);
-                    //rayCast = Physics.Raycast(ray, out hitPoint, 10000.0f);
-                    //if (rayCast)//Can't see it => underwater
-                    //{
-                    //    nwSphere.GetComponent<Renderer>().material = redMat;
-                    //}
                 }
 
 
@@ -163,14 +147,28 @@ public class TileMap : MonoBehaviour {
                         }
                     }
 
-                    //bool rayCast;
-                    //RaycastHit hitPoint;
-                    //Ray ray = Camera.main.ScreenPointToRay(mNode.Position);
-                    //rayCast = Physics.Raycast(ray, out hitPoint, 10000.0f);
-                    //if (rayCast)//Can't see it => underwater
-                    //{
-                    //    nwSphere.GetComponent<Renderer>().material = redMat;
-                    //}
+                    if (!mNode.Sinked)
+                    {
+                        bool rayCast;
+                        RaycastHit hitPoint;
+
+                        Vector3 target = mNode.Position;
+                        Vector3 flatMapPosition = GameObject.Find("FlatMap").gameObject.transform.position;
+                        Vector3 origin = new Vector3(target.x, flatMapPosition.y - 5, target.z);
+                        Vector3 direction = target - origin;
+
+                        Debug.DrawRay(origin, direction);
+
+
+                        //Ray ray = Camera.main.ScreenPointToRay(mNode.Position);
+                        rayCast = Physics.Raycast(origin, direction,out hitPoint, Mathf.Infinity);
+                        if (rayCast &&  hitPoint.collider.gameObject.name != "HeightMap")//Can't see it => underwater
+                        {
+                            //Debug.DrawLine(origin, hitPoint.collider.gameObject.transform.position, Color.red);
+                            mNode.Sink();
+                        }
+
+                    }
                 }
 
 

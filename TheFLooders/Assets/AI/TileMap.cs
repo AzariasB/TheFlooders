@@ -7,6 +7,13 @@ public class TileMap : MonoBehaviour {
 
     private GraphNode[][] _nodes;
 
+    private float _startX;
+    private float _startZ;
+    private float _stepX;
+    private float _stepZ;
+    private float _mapWidth;
+    private float _mapHeight;
+
     public int NodeRows;
     public int NodeColumns;
 
@@ -21,22 +28,22 @@ public class TileMap : MonoBehaviour {
         TerrainHeightMap heightMap = GameObject.Find("HeightMap").GetComponent<TerrainHeightMap>();
 
 
-        float Width = heightMap.Width;
-        float Height = heightMap.Height;
+        _mapWidth = heightMap.Width;
+        _mapHeight = heightMap.Height;
 
-        float xSteps = Width / (NodeColumns);
-        float zSteps = Height / (NodeRows);
+        _stepX = _mapWidth / (NodeColumns);
+        _stepZ = _mapHeight / (NodeRows);
 
-        float startX = -(Width / 2) + (xSteps / 2);
-        float startZ = -(Height / 2) + (zSteps / 2);
+        _startX = -(_mapWidth / 2) + (_stepX / 2);
+        _startZ = -(_mapHeight / 2) + (_stepZ / 2);
 
         //Create nodes
         for (int z = 0; z < NodeRows;z++)
         {
             for(int x = 0; x < NodeColumns; x++)
             {
-                float zPos = (z * zSteps) + startZ;
-                float xPos = (x * xSteps) + startX;
+                float zPos = (z * _stepZ) + _startZ;
+                float xPos = (x * _stepX) + _startX;
                 float yPos = (float)heightMap.GetHeight(xPos, zPos);
                 Vector3 nodePos = new Vector3(xPos, yPos, zPos);
                 //Check water height
@@ -54,10 +61,13 @@ public class TileMap : MonoBehaviour {
         }
 
         //Debug print
-        DebugPrint();
+        CheckBase();
 	}
 
-    private void DebugPrint()
+    /// <summary>
+    /// Sinks the nodes that already are underwater
+    /// </summary>
+    private void CheckBase()
     {
         Material redMat = Resources.Load("RedMaterial", typeof(Material)) as Material;
         FloodControl Control = GameObject.Find("Flood wave control").GetComponent<FloodControl>();
@@ -69,19 +79,14 @@ public class TileMap : MonoBehaviour {
         {
             for(int x = 0; x < NodeColumns; x++)
             {
-                
-
                 GraphNode mNode = _nodes[z][x];
                 if (mNode != null)
                 {
                     if(mNode.Position.y <= waterHeight)
                     {
                         mNode.Sink();
-                        mNode.Sinked = true;
                     }
                 }
-
-
             }
         }
     }
@@ -123,6 +128,21 @@ public class TileMap : MonoBehaviour {
     private bool IsValidCoord(int x, int z)
     {
         return x >= 0 && x < NodeColumns && z >= 0 && z < NodeRows;
+    }
+
+    GraphNode GetNodeAtCoords(float x, float z)
+    {
+        if (x < _startX || x > _startX + _mapWidth || z < _startZ || z > _startZ + _mapHeight)
+            return null; //404 not found
+
+        x -= _startX;
+        z -= _startZ;
+        int xIndex =  (int)(x / _stepX);
+        int zIndex =  (int)(z / _stepZ);
+        if (xIndex < 0 || xIndex >= NodeColumns || zIndex < 0 || zIndex >= NodeRows)
+            return null;
+
+        return _nodes[zIndex][xIndex];
     }
 
     void Update()

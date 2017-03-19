@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class LevelInfo : MonoBehaviour {
 
+    public Vector3 Destination;
+
     public float LevelDuration {
         get {
             return _levelDuration;
@@ -37,6 +39,9 @@ public class LevelInfo : MonoBehaviour {
             _instance = value;
         }
     }
+
+
+
     private static LevelInfo _instance;
 
 	// Use this for initialization

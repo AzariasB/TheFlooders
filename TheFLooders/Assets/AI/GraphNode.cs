@@ -61,5 +61,11 @@ public class GraphNode {
         }
     }
 
+    public void DebugTrace()
+    {
+        GameObject debug = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        debug.transform.position = Position;
+        Debug.Log(string.Format("x : {0} z : {1}", Position.x, Position.z));
+    }
 
 }

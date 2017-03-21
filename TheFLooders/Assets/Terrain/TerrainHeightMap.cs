@@ -276,6 +276,7 @@ public class TerrainHeightMap : MonoBehaviour
 
         HeightMapMesh.triangles = triangles;
         HeightMapMesh.uv = uvs;
+		HeightMapMesh.RecalculateNormals ();
     }
 
 }

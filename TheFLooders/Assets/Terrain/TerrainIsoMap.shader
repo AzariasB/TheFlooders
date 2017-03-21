@@ -16,6 +16,7 @@
             
     struct Input {
       float3 worldPos;
+      float3 worldNormal;
     };
             
     fixed4 _BGColor;
@@ -27,7 +28,14 @@
     void surf (Input IN, inout SurfaceOutput o) {
       // On ramène sur [0, 1] la position du point dans sa "tranche"
       float pointWorldRelPos = (IN.worldPos.y / _LinesSpacing) - floor(IN.worldPos.y / _LinesSpacing);
-      float lineLimitRelPos = _LinesWidth / _LinesSpacing;
+
+      // La largeur de la ligne sur y dépend de l'angle de la normale :
+      //   - face "verticale" => hauteur de la bande = _LinesWidth
+      //   - face "horizontale" (cas limite) : hauteur de la bande = 0
+      // la projection de la normale sur le plan horizontal donne le coef.
+      float2 normProj = (IN.worldNormal.x, IN.worldNormal.z);
+      float coef = sqrt(dot(normProj, normProj));
+      float lineLimitRelPos =  coef * _LinesWidth / _LinesSpacing;
                   
       o.Albedo =
       	step((1-pointWorldRelPos), (1 - lineLimitRelPos))* _BGColor +

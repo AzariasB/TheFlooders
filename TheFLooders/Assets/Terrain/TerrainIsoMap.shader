@@ -29,13 +29,13 @@
       // On ramène sur [0, 1] la position du point dans sa "tranche"
       float pointWorldRelPos = (IN.worldPos.y / _LinesSpacing) - floor(IN.worldPos.y / _LinesSpacing);
 
-      // La largeur de la ligne sur y dépend de l'angle de la normale :
-      //   - face "verticale" => hauteur de la bande = _LinesWidth
-      //   - face "horizontale" (cas limite) : hauteur de la bande = 0
-      // la projection de la normale sur le plan horizontal donne le coef.
+      // On esaie d'obtenir une largeur constante projetée sur le plan xz
+      // Soit L la largeur projetée sur le plan horizontal, on calcule
+      // une tangeante de l'angle de la normale pour avoir la hauteur de la bande sur y.
       float2 normProj = (IN.worldNormal.x, IN.worldNormal.z);
-      float coef = sqrt(dot(normProj, normProj));
-      float lineLimitRelPos =  coef * _LinesWidth / _LinesSpacing;
+      float Nxz = sqrt(dot(normProj, normProj));
+      float Ny = IN.worldNormal.y;
+      float lineLimitRelPos =  Nxz / Ny * _LinesWidth / _LinesSpacing;
                   
       o.Albedo =
       	step((1-pointWorldRelPos), (1 - lineLimitRelPos))* _BGColor +

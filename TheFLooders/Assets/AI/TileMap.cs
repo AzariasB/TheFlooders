@@ -73,7 +73,7 @@ public class TileMap : MonoBehaviour {
     /// </summary>
     private void CheckBase()
     {
-        Material redMat = Resources.Load("RedMaterial", typeof(Material)) as Material;
+//        Material redMat = Resources.Load("RedMaterial", typeof(Material)) as Material;
         FloodControl Control = GameObject.Find("Flood water mover").GetComponent<FloodControl>();
 
         float waterHeight = Control.stillWaterPlane.transform.position.y;
@@ -153,8 +153,8 @@ public class TileMap : MonoBehaviour {
 
     void Update()
     {
-        FloodControl Control = GameObject.Find("Flood water mover").GetComponent<FloodControl>();
-        float waterHeight = Control.stillWaterPlane.transform.position.y;
+//        FloodControl Control = GameObject.Find("Flood water mover").GetComponent<FloodControl>();
+//        float waterHeight = Control.stillWaterPlane.transform.position.y;
         //Shows all the nodes
         for (int z = 0; z < NodeRows; z++)
         {

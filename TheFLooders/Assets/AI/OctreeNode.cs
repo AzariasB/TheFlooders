@@ -14,7 +14,7 @@ public class OctreeNode {
 
     private int _childCount;
 
-    private Vector3 _center;
+    //private Vector3 _center;
 
     public GraphNode GraphNode;
 
@@ -50,23 +50,23 @@ public class OctreeNode {
             _childs[_childCount] = new OctreeNode(toAdd);
         }
     }
-
-    public GraphNode GetGraphNode(Vector3 position)
-    {
-        if (IsLeaf())
-        {
-            return GraphNode;
-        }
-        OctreeNode childConcerned;
-        if(_center.x  < position.x)
-        {
-            childConcerned =  _center.z < position.z ? _childs[2] : _childs[4];
-        }
-        else
-        {
-            childConcerned = _center.z < position.z ? _childs[1] : _childs[3];
-        }
-        return childConcerned.GetGraphNode(position);
-    }
-
+//
+//    public GraphNode GetGraphNode(Vector3 position)
+//    {
+//        if (IsLeaf())
+//        {
+//            return GraphNode;
+//        }
+//        OctreeNode childConcerned;
+//        if(_center.x  < position.x)
+//        {
+//            childConcerned =  _center.z < position.z ? _childs[2] : _childs[4];
+//        }
+//        else
+//        {
+//            childConcerned = _center.z < position.z ? _childs[1] : _childs[3];
+//        }
+//        return childConcerned.GetGraphNode(position);
+//    }
+//
 }

@@ -1,12 +1,12 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class TerrainHeightMap : MonoBehaviour
 {
     [Tooltip ("Image source pour la carte de hauteur")]
     [SerializeField]
     private Texture2D _heightMapTexture = null;
-
     public Texture2D HeightMapTexture {
         get {
             return _heightMapTexture;
@@ -14,6 +14,21 @@ public class TerrainHeightMap : MonoBehaviour
         set {
             if (_heightMapTexture != value) {
                 _heightMapTexture = value;
+                RecomputeSamples ();
+            }
+        }
+    }
+
+    [Tooltip ("Pas d'échantillonage de la heightmap (espace UV) pour déterminer le gradient")]
+    [SerializeField]
+    private float _gradientSampleUVPitch = 0.01f;
+    public float GradientSampleUVPitch {
+        get {
+            return _gradientSampleUVPitch;
+        }
+        set {
+            if (_gradientSampleUVPitch != value) {
+                _gradientSampleUVPitch = value;
                 RecomputeSamples ();
             }
         }
@@ -162,7 +177,6 @@ public class TerrainHeightMap : MonoBehaviour
     public void RecomputeSamples ()
     {
         HeightMapMesh.Clear ();
-        float[][] oldData = _heightData;
         _heightData = null;
 
         // test de validité
@@ -184,15 +198,6 @@ public class TerrainHeightMap : MonoBehaviour
             }
         }
 
-        // Comparaison avec la taille précédente
-        bool sizeChanged;
-        if (oldData != null) {
-            sizeChanged = nSubdivX + 1 != oldData.Length || nSubdivY + 1 != oldData [0].Length;
-            oldData = null; // Pour que le GC puisse libérer ce tableau avant d'instancier le nouveau.
-        } else {
-            sizeChanged = true;
-        }
-
         // Unity ne gère pas les meshes de plus de 65k sommets
         if ((nSubdivX + 1) * (nSubdivY + 1) > 65000) {
             Debug.LogError ("Ce terrain est trop détaillé, Unity ne peut pas représenter un Mesh de cette taille");
@@ -207,9 +212,7 @@ public class TerrainHeightMap : MonoBehaviour
         // Echantillonnage de l'image source
         for (int colIdx = 0; colIdx <= nSubdivX; colIdx++) {
             for (int rowIdx = 0; rowIdx <= nSubdivY; rowIdx++) {
-                int pixelXIdx = (int)((float)colIdx / nSubdivX * _heightMapTexture.width);
-                int pixelYIdx = (int)((float)rowIdx / nSubdivY * _heightMapTexture.height);
-                Color c = _heightMapTexture.GetPixel (pixelXIdx, pixelYIdx);
+                Color c = SampleTexture((float)colIdx / nSubdivX, (float)rowIdx / nSubdivY);
                 _heightData [colIdx] [rowIdx] = c.grayscale * TerrainMaxHeight;
             }
         }
@@ -252,11 +255,19 @@ public class TerrainHeightMap : MonoBehaviour
 
     private void RebuildTrianglesAndUVs(int nSubdivX, int nSubdivY) {
 
-        Vector2[] uvs = new Vector2[(nSubdivX + 1) * (nSubdivY + 1)];
+        List<Vector4> uvs = new List<Vector4>();
         for (int colIdx = 0; colIdx <= nSubdivX; colIdx++) {
             for (int rowIdx = 0; rowIdx <= nSubdivY; rowIdx++) {
-                int vertexIdx = colIdx * (nSubdivY + 1) + rowIdx;
-                uvs [vertexIdx] = new Vector2 ((float) colIdx / nSubdivX, (float) rowIdx / nSubdivY);
+                
+                // Le gradient de la heightmap est passé dans le shader
+                // via les canaux 3 et 4 des coordonnées UV.
+                // Il s'en servira pour déterminer la hauteur de sa bande colorée
+                float uvx = (float)colIdx / nSubdivX;
+                float uvy = (float)rowIdx / nSubdivY;
+                Vector2 grad = SampleGradient(uvx, uvy);
+                Vector4 newVect = new Vector4(uvx, uvy, grad.x, grad.y);
+//                Debug.Log(newVect);
+                uvs.Add(newVect);
             }
         }
 
@@ -275,8 +286,32 @@ public class TerrainHeightMap : MonoBehaviour
         }
 
         HeightMapMesh.triangles = triangles;
-        HeightMapMesh.uv = uvs;
+        HeightMapMesh.SetUVs(0, uvs);
 		HeightMapMesh.RecalculateNormals ();
+    }
+
+    private Color SampleTexture(float uvx, float uvy) {
+        int pixelXIdx = (int)(uvx * _heightMapTexture.width);
+        if (pixelXIdx < 0)
+            pixelXIdx = 0;
+        if (pixelXIdx > _heightMapTexture.width - 1)
+            pixelXIdx = _heightMapTexture.width - 1;
+        int pixelYIdx = (int)(uvy * _heightMapTexture.height);
+        if (pixelYIdx < 0)
+            pixelYIdx = 0;
+        if (pixelYIdx > _heightMapTexture.height - 1)
+            pixelYIdx = _heightMapTexture.height - 1;
+        return _heightMapTexture.GetPixel (pixelXIdx, pixelYIdx);
+    }
+
+    private Vector2 SampleGradient(float uvx, float uvy) {
+        Color cxPlus = SampleTexture(uvx + _gradientSampleUVPitch / 2, uvy);
+        Color cxMinus = SampleTexture(uvx - _gradientSampleUVPitch / 2, uvy);
+        float dx = (cxPlus.grayscale -cxMinus.grayscale) / _gradientSampleUVPitch;
+        Color cyPlus = SampleTexture(uvx, uvy + _gradientSampleUVPitch / 2);
+        Color cyMinus = SampleTexture(uvx, uvy - _gradientSampleUVPitch / 2);
+        float dy = (cyPlus.grayscale -cyMinus.grayscale) / _gradientSampleUVPitch;
+        return new Vector2(dx, dy);
     }
 
 }

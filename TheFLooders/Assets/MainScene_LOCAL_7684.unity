@@ -2305,8 +2305,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96040e50dc4dc2c489b0ef662bae46c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _heightMapTexture: {fileID: 2800000, guid: 610630232f01f4b48944995468bff030, type: 3}
-  _gradientSampleUVPitch: 0.005
+  _heightMapTexture: {fileID: 2800000, guid: 2da16db979aa248eaaac7097e0899325, type: 3}
+  _gradientSampleUVPitch: 0.01
   TargetMeshFilter: {fileID: 1773792168}
   TargetMeshCollider: {fileID: 1773792166}
   TerrainMaxHeight: 30

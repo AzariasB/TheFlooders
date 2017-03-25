@@ -256,6 +256,7 @@ public class TerrainHeightMap : MonoBehaviour
     private void RebuildTrianglesAndUVs(int nSubdivX, int nSubdivY) {
 
         List<Vector4> uvs = new List<Vector4>();
+        int nGrads = 0;
         for (int colIdx = 0; colIdx <= nSubdivX; colIdx++) {
             for (int rowIdx = 0; rowIdx <= nSubdivY; rowIdx++) {
                 
@@ -265,11 +266,19 @@ public class TerrainHeightMap : MonoBehaviour
                 float uvx = (float)colIdx / nSubdivX;
                 float uvy = (float)rowIdx / nSubdivY;
                 Vector2 grad = SampleGradient(uvx, uvy);
+
+
+                if (grad.x != 0 || grad.y != 0)
+                {
+                    Debug.Log(grad);
+                    nGrads++;
+                }
+
                 Vector4 newVect = new Vector4(uvx, uvy, grad.x, grad.y);
-//                Debug.Log(newVect);
                 uvs.Add(newVect);
             }
         }
+        Debug.Log("nGrads non nuls : " + nGrads.ToString());
 
         int[] triangles = new int[6 * nSubdivX  * nSubdivY]; // Un quad = 2 triangles = 6 sommets
         for (int colIdx = 0; colIdx < nSubdivX; colIdx++) {
@@ -304,14 +313,35 @@ public class TerrainHeightMap : MonoBehaviour
         return _heightMapTexture.GetPixel (pixelXIdx, pixelYIdx);
     }
 
+    /// <summary>
+    /// Echantillonne le
+    /// </summary>
     private Vector2 SampleGradient(float uvx, float uvy) {
-        Color cxPlus = SampleTexture(uvx + _gradientSampleUVPitch / 2, uvy);
-        Color cxMinus = SampleTexture(uvx - _gradientSampleUVPitch / 2, uvy);
-        float dx = (cxPlus.grayscale -cxMinus.grayscale) / _gradientSampleUVPitch;
-        Color cyPlus = SampleTexture(uvx, uvy + _gradientSampleUVPitch / 2);
-        Color cyMinus = SampleTexture(uvx, uvy - _gradientSampleUVPitch / 2);
-        float dy = (cyPlus.grayscale -cyMinus.grayscale) / _gradientSampleUVPitch;
-        return new Vector2(dx, dy);
+
+        float uvx_1 = uvx - _gradientSampleUVPitch / 2;
+        float uvx1 = uvx + _gradientSampleUVPitch / 2;
+        float uvy_1 = uvy - _gradientSampleUVPitch / 2;
+        float uvy1 = uvy + _gradientSampleUVPitch / 2;
+
+        float c_1_1 = SampleTexture(uvx_1, uvy_1).grayscale;
+        float c_10 = SampleTexture(uvx_1, uvy).grayscale;
+        float c_11 = SampleTexture(uvx_1, uvy1).grayscale;
+        float c0_1 = SampleTexture(uvx, uvy_1).grayscale;
+        float c01 = SampleTexture(uvx, uvy1).grayscale;
+        float c1_1 = SampleTexture(uvx1, uvy_1).grayscale;
+        float c10 = SampleTexture(uvx1, uvy).grayscale;
+        float c11 = SampleTexture(uvx1, uvy1).grayscale;
+
+        float dx = (c1_1 + 2 * c10 + c11 - c_1_1 - 2 * c_10 - c_11) / 4 / _gradientSampleUVPitch;
+        if (uvx_1 < 0 || uvx1 > 1)
+            dx *= 2;
+        
+        float dy = (c_11 + 2*c01 + c11 - c_1_1 - 2*c0_1 - c1_1) / 4 / _gradientSampleUVPitch;
+        if (uvy_1 < 0 || uvy1 > 1)
+            dy *= 2;
+        
+        Vector2 res = new Vector2(dx, dy);
+        return res;
     }
 
 }

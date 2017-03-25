@@ -5,9 +5,10 @@ Shader "Terrain/FlatTerrainMix"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _MainColor ("Main color", Color) = (1, 0, 0, 1)
-        _BandColor ("Band color", Color) = (0, 1, 0, 1)
-        _BandPeriodicity ("Band periodicity", float) = 0.1
-        _BandWidth ("Band width", float) = 0.5
+        _LineColor ("Line color", Color) = (0, 1, 0, 1)
+        _LineYPeriod ("Line vertical periodicity", float) = 0.1
+        _LineWidth ("Line width", float) = 0.5
+        _Smoothness ("Line smoothness", Range(0.01, 1)) = 0.2
     }
     SubShader
     {
@@ -25,9 +26,10 @@ Shader "Terrain/FlatTerrainMix"
             
             sampler2D _MainTex;
             half4 _MainColor;
-            half4 _BandColor;
-            half _BandPeriodicity;
-            half _BandWidth;
+            half4 _LineColor;
+            half _LineYPeriod;
+            half _LineWidth;
+            half _Smoothness;
 
             v2f vert (
                 float4 vertex : POSITION, // vertex position input
@@ -43,29 +45,34 @@ Shader "Terrain/FlatTerrainMix"
             // pixel shader, no inputs needed
             fixed4 frag (v2f i) : SV_Target
             {
+            	const half sqrt3 = 1.73205080757;
+
                 // Extraction des infos passées au shader dans
                 // les canaux 3 et 4 des coordonnées UV.
+                // Il s'agit du gradient de la heightmap, interpollé entre chaque
+                // sommet du mesh.
                 half2 yGradInUVSpace = i.uv.zw;
-                half bandWidthCoef = _BandWidth * length(yGradInUVSpace);
 
-                // Hauteur des bandes
-                half bandHeight = bandWidthCoef * _BandWidth;
+                // Hauteur des lignes, projetée sur l'espace vertical décrit par la heightmap
+                half linePaintHeight = length(yGradInUVSpace) * _LineWidth;
 
             	// Récupération de l'information de hauteur
-                half4 c = tex2D (_MainTex, i.uv.xy);
-                half h = length(c);
+                half heightMapValue = length(tex2D (_MainTex, i.uv.xy).xyz)/sqrt3;
 
-                // Début de la périodicité
-                half fromPeriodStart = frac(h / _BandPeriodicity);
-                half4 finalColor =
-                	step(bandHeight, fromPeriodStart) * _MainColor +
-                	step((1 - bandHeight), (1 - fromPeriodStart)) * _BandColor;
-//                half4 finalColor =
-//                	smoothstep(bandHeight *0.9, bandHeight*1.1, fromPeriodStart) * _MainColor +
-//                	smoothstep((1 - bandHeight) *0.9, (1 - bandHeight)*1.1, (1 - fromPeriodStart)) * _BandColor;
+                // Décalage du pixel courant par rapport au début de sa période
+                float periodStart = floor(heightMapValue / _LineYPeriod) * _LineYPeriod;
+                float periodEnd = periodStart + _LineYPeriod;
 
-            	return finalColor;
-                // return fixed4(bandWidthCoef, bandWidthCoef, bandWidthCoef, 1);
+                // Fin de la bande
+                float maxHeight = periodStart + linePaintHeight;
+
+                // lissage des limites pour cacher des pb d'échantillonnage
+                const float smooth = linePaintHeight*_Smoothness;
+                float afterStart = smoothstep(periodStart, periodStart + smooth, heightMapValue);
+                float beforeEnd = smoothstep(_LineYPeriod - linePaintHeight - smooth, _LineYPeriod - linePaintHeight, periodEnd - heightMapValue);
+                float inLine = afterStart * beforeEnd;
+
+                return inLine * _LineColor + (1 - inLine) * _MainColor;
             }
             ENDCG
         }

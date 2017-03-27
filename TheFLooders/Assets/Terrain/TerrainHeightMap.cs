@@ -94,6 +94,8 @@ public class TerrainHeightMap : MonoBehaviour
 
     // Les données de hauteur
     private float[][] _heightData;
+    private int heightDataNCols;
+    private int heightDataNRows;
 
     /// <summary>
     /// Obtient la hauteur du terrain aux coordonnées spécifiées.
@@ -128,12 +130,10 @@ public class TerrainHeightMap : MonoBehaviour
             return;
 
         // Détermination des indices concernés
-        int nCols = _heightData.Length;
-        int nRows = _heightData [0].Length;
-        int colIndexMin = Mathf.CeilToInt(Mathf.Clamp((targetZone.xMin + Width / 2) / Width * (nCols -1), 0, nCols-1));
-        int colIndexMax = (int) Mathf.Clamp((targetZone.xMax + Width / 2) / Width * (nCols -1), 0, nCols-1);
-        int rowIndexMin = Mathf.CeilToInt(Mathf.Clamp((targetZone.yMin + Height / 2) / Height * (nRows -1), 0, nRows-1));
-        int rowIndexMax = (int) Mathf.Clamp((targetZone.yMax + Height / 2) / Height * (nRows -1), 0, nRows-1);
+        int colIndexMin = Mathf.CeilToInt(Mathf.Clamp((targetZone.xMin + Width / 2) / Width * (heightDataNCols -1), 0, heightDataNCols-1));
+        int colIndexMax = (int) Mathf.Clamp((targetZone.xMax + Width / 2) / Width * (heightDataNCols -1), 0, heightDataNCols-1);
+        int rowIndexMin = Mathf.CeilToInt(Mathf.Clamp((targetZone.yMin + Height / 2) / Height * (heightDataNRows -1), 0, heightDataNRows-1));
+        int rowIndexMax = (int) Mathf.Clamp((targetZone.yMax + Height / 2) / Height * (heightDataNRows -1), 0, heightDataNRows-1);
         if (colIndexMax < colIndexMin || rowIndexMax < rowIndexMin)
             return;
 
@@ -152,9 +152,9 @@ public class TerrainHeightMap : MonoBehaviour
         for (int colIndex = colIndexMin; colIndex <= colIndexMax; colIndex++) {
             for (int rowIndex = rowIndexMin; rowIndex <= rowIndexMax; rowIndex++) {
                 Vector3 position = new Vector3(
-                    ((float) colIndex / nCols - 0.5f) * Width,
+                    ((float) colIndex / heightDataNCols - 0.5f) * Width,
                     _heightData [colIndex] [rowIndex],
-                    ((float) rowIndex / nRows - 0.5f) * Height);
+                    ((float) rowIndex / heightDataNRows - 0.5f) * Height);
                 copy [colIndex - colIndexMin] [rowIndex - rowIndexMin] = transformOperator(position);
             }
         }
@@ -178,6 +178,8 @@ public class TerrainHeightMap : MonoBehaviour
     {
         HeightMapMesh.Clear ();
         _heightData = null;
+        heightDataNCols = 0;
+        heightDataNRows = 0;
 
         // test de validité
         if (IsEmpty ()) {
@@ -185,34 +187,32 @@ public class TerrainHeightMap : MonoBehaviour
         }
 
         // Calcul du nombre de subdivisions sur chaque axe
-        int nSubdivX = 0;
-        int nSubdivY = 0;
         float heightCopy = Height; // Calcule le getter une seule fois
         if (_width > 0 && heightCopy > 0 && _minSubdivisions >= 1) {
             if (_width > heightCopy) {
-                nSubdivY = _minSubdivisions;
-                nSubdivX = Mathf.CeilToInt (_width / heightCopy * _minSubdivisions);
+                heightDataNRows = _minSubdivisions +1;
+                heightDataNCols = Mathf.CeilToInt (_width / heightCopy * _minSubdivisions) +1;
             } else {
-                nSubdivX = _minSubdivisions;
-                nSubdivY = Mathf.CeilToInt (heightCopy / _width * _minSubdivisions);
+                heightDataNCols = _minSubdivisions +1;
+                heightDataNRows = Mathf.CeilToInt (heightCopy / _width * _minSubdivisions) +1;
             }
         }
 
         // Unity ne gère pas les meshes de plus de 65k sommets
-        if ((nSubdivX + 1) * (nSubdivY + 1) > 65000) {
+        if ((heightDataNCols) * (heightDataNRows) > 65000) {
             Debug.LogError ("Ce terrain est trop détaillé, Unity ne peut pas représenter un Mesh de cette taille");
             return;
         }
 
         // Instanciation du tableau des hauteurs.
-        _heightData = new float[nSubdivX + 1][];
-        for (int i = 0; i <= nSubdivX; i++)
-            _heightData [i] = new float[nSubdivY + 1];
+        _heightData = new float[heightDataNCols][];
+        for (int i = 0; i < heightDataNCols; i++)
+            _heightData [i] = new float[heightDataNRows];
 
         // Echantillonnage de l'image source
-        for (int colIdx = 0; colIdx <= nSubdivX; colIdx++) {
-            for (int rowIdx = 0; rowIdx <= nSubdivY; rowIdx++) {
-                Color c = SampleTexture((float)colIdx / nSubdivX, (float)rowIdx / nSubdivY);
+        for (int colIdx = 0; colIdx < heightDataNCols; colIdx++) {
+            for (int rowIdx = 0; rowIdx < heightDataNRows; rowIdx++) {
+                Color c = SampleHeightMap((float)colIdx / (heightDataNCols -1), (float)rowIdx / (heightDataNRows -1)); 
                 _heightData [colIdx] [rowIdx] = c.grayscale * TerrainMaxHeight;
             }
         }
@@ -221,8 +221,8 @@ public class TerrainHeightMap : MonoBehaviour
     }
 
     private void ApplyHeightData() {
-        int nSubdivX = _heightData.Length -1;
-        int nSubdivY = _heightData[0].Length -1;
+        int nSubdivX = heightDataNCols -1;
+        int nSubdivY = heightDataNRows -1;
 
         // Transformation en vertex
         Vector3[] vertices = new Vector3[(nSubdivX + 1) * (nSubdivY + 1)];
@@ -265,14 +265,14 @@ public class TerrainHeightMap : MonoBehaviour
                 // Il s'en servira pour déterminer la hauteur de sa bande colorée
                 float uvx = (float)colIdx / nSubdivX;
                 float uvy = (float)rowIdx / nSubdivY;
-                Vector2 grad = SampleGradient(uvx, uvy);
+                Vector2 grad = SampleGradient(colIdx, rowIdx);
 
 
-                if (grad.x != 0 || grad.y != 0)
-                {
-                    Debug.Log(grad);
-                    nGrads++;
-                }
+//                if (grad.x != 0 || grad.y != 0)
+//                {
+//                    Debug.Log(grad);
+//                    nGrads++;
+//                }
 
                 Vector4 newVect = new Vector4(uvx, uvy, grad.x, grad.y);
                 uvs.Add(newVect);
@@ -299,49 +299,62 @@ public class TerrainHeightMap : MonoBehaviour
 		HeightMapMesh.RecalculateNormals ();
     }
 
-    private Color SampleTexture(float uvx, float uvy) {
-        int pixelXIdx = (int)(uvx * _heightMapTexture.width);
-        if (pixelXIdx < 0)
-            pixelXIdx = 0;
-        if (pixelXIdx > _heightMapTexture.width - 1)
-            pixelXIdx = _heightMapTexture.width - 1;
-        int pixelYIdx = (int)(uvy * _heightMapTexture.height);
-        if (pixelYIdx < 0)
-            pixelYIdx = 0;
-        if (pixelYIdx > _heightMapTexture.height - 1)
-            pixelYIdx = _heightMapTexture.height - 1;
-        return _heightMapTexture.GetPixel (pixelXIdx, pixelYIdx);
-    }
-
     /// <summary>
-    /// Echantillonne le
+    /// Applique un filtre de Sobel sur les données de hauteur dynamiques
+    /// pour estimer le gradient du terrain à l'endroit désigné.
     /// </summary>
-    private Vector2 SampleGradient(float uvx, float uvy) {
+    private Vector2 SampleGradient(int colIdx, int rowIdx) {
 
-        float uvx_1 = uvx - _gradientSampleUVPitch / 2;
-        float uvx1 = uvx + _gradientSampleUVPitch / 2;
-        float uvy_1 = uvy - _gradientSampleUVPitch / 2;
-        float uvy1 = uvy + _gradientSampleUVPitch / 2;
+        float h_1_1 = SampleHeightData(colIdx -1, rowIdx -1);
+        float h_10 = SampleHeightData(colIdx -1, rowIdx);
+        float h_11 = SampleHeightData(colIdx -1, rowIdx +1);
+        float h0_1 = SampleHeightData(colIdx, rowIdx -1);
+        float h01 = SampleHeightData(colIdx, rowIdx +1);
+        float h1_1 = SampleHeightData(colIdx +1, rowIdx -1);
+        float h10 = SampleHeightData(colIdx +1, rowIdx);
+        float h11 = SampleHeightData(colIdx +1, rowIdx +1);
 
-        float c_1_1 = SampleTexture(uvx_1, uvy_1).grayscale;
-        float c_10 = SampleTexture(uvx_1, uvy).grayscale;
-        float c_11 = SampleTexture(uvx_1, uvy1).grayscale;
-        float c0_1 = SampleTexture(uvx, uvy_1).grayscale;
-        float c01 = SampleTexture(uvx, uvy1).grayscale;
-        float c1_1 = SampleTexture(uvx1, uvy_1).grayscale;
-        float c10 = SampleTexture(uvx1, uvy).grayscale;
-        float c11 = SampleTexture(uvx1, uvy1).grayscale;
-
-        float dx = (c1_1 + 2 * c10 + c11 - c_1_1 - 2 * c_10 - c_11) / 4 / _gradientSampleUVPitch;
-        if (uvx_1 < 0 || uvx1 > 1)
+        float dx = (h1_1 + 2 * h10 + h11 - h_1_1 - 2 * h_10 - h_11) / 4 / _gradientSampleUVPitch;
+        if (colIdx < 0 || colIdx >= heightDataNCols)
             dx *= 2;
         
-        float dy = (c_11 + 2*c01 + c11 - c_1_1 - 2*c0_1 - c1_1) / 4 / _gradientSampleUVPitch;
-        if (uvy_1 < 0 || uvy1 > 1)
+        float dy = (h_11 + 2*h01 + h11 - h_1_1 - 2*h0_1 - h1_1) / 4 / _gradientSampleUVPitch;
+        if (rowIdx < 0 || rowIdx >= heightDataNRows)
             dy *= 2;
         
         Vector2 res = new Vector2(dx, dy);
         return res;
+    }
+
+    private Color SampleHeightMap(float uvx, float uvy) { 
+        int pixelXIdx = (int)(uvx * _heightMapTexture.width); 
+        if (pixelXIdx < 0) 
+            pixelXIdx = 0; 
+        if (pixelXIdx > _heightMapTexture.width - 1) 
+            pixelXIdx = _heightMapTexture.width - 1; 
+        int pixelYIdx = (int)(uvy * _heightMapTexture.height); 
+        if (pixelYIdx < 0) 
+            pixelYIdx = 0; 
+        if (pixelYIdx > _heightMapTexture.height - 1) 
+            pixelYIdx = _heightMapTexture.height - 1; 
+        return _heightMapTexture.GetPixel (pixelXIdx, pixelYIdx); 
+    }
+
+    private float SampleHeightData(int colIdx, int rowIdx) {
+        if (IsEmpty())
+            return 0;
+
+        int clampedColIdx = colIdx;
+        if (clampedColIdx < 0)
+            clampedColIdx = 0;
+        if (clampedColIdx >= heightDataNCols)
+            clampedColIdx = heightDataNCols - 1;
+        int clampedRowIdx = rowIdx;
+        if (clampedRowIdx < 0)
+            clampedRowIdx = 0;
+        if (clampedRowIdx >= heightDataNRows)
+            clampedRowIdx = heightDataNRows - 1;
+        return _heightData[clampedColIdx][clampedRowIdx];
     }
 
 }

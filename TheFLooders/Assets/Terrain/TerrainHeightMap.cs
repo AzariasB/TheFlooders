@@ -19,21 +19,6 @@ public class TerrainHeightMap : MonoBehaviour
         }
     }
 
-    [Tooltip ("Pas d'échantillonage de la heightmap (espace UV) pour déterminer le gradient")]
-    [SerializeField]
-    private float _gradientSampleUVPitch = 0.01f;
-    public float GradientSampleUVPitch {
-        get {
-            return _gradientSampleUVPitch;
-        }
-        set {
-            if (_gradientSampleUVPitch != value) {
-                _gradientSampleUVPitch = value;
-                RecomputeSamples ();
-            }
-        }
-    }
-
     [Tooltip("MeshFilter cible où ce composant écrit le mesh qu'il produit automatiquement")]
     public MeshFilter TargetMeshFilter;
 
@@ -117,10 +102,6 @@ public class TerrainHeightMap : MonoBehaviour
         HeightMapMesh = new Mesh ();
         HeightMapMesh.name = "AltitudeMesh";
         RecomputeSamples ();
-    }
-
-    private void Update() {
-        
     }
 
     public delegate float TerrainTransform(Vector3 localPosition);
@@ -213,7 +194,7 @@ public class TerrainHeightMap : MonoBehaviour
         for (int colIdx = 0; colIdx < heightDataNCols; colIdx++) {
             for (int rowIdx = 0; rowIdx < heightDataNRows; rowIdx++) {
                 Color c = SampleHeightMap((float)colIdx / (heightDataNCols -1), (float)rowIdx / (heightDataNRows -1)); 
-                _heightData [colIdx] [rowIdx] = c.grayscale * TerrainMaxHeight;
+                _heightData [colIdx] [rowIdx] = (c.grayscale -0.5f) * TerrainMaxHeight;
             }
         }
 
@@ -314,11 +295,13 @@ public class TerrainHeightMap : MonoBehaviour
         float h10 = SampleHeightData(colIdx +1, rowIdx);
         float h11 = SampleHeightData(colIdx +1, rowIdx +1);
 
-        float dx = (h1_1 + 2 * h10 + h11 - h_1_1 - 2 * h_10 - h_11) / 4 / _gradientSampleUVPitch;
+        float hStep = Width / (heightDataNCols - 1);
+        float dx = (h1_1 + 2 * h10 + h11 - h_1_1 - 2 * h_10 - h_11) / 4 / hStep;
         if (colIdx < 0 || colIdx >= heightDataNCols)
             dx *= 2;
-        
-        float dy = (h_11 + 2*h01 + h11 - h_1_1 - 2*h0_1 - h1_1) / 4 / _gradientSampleUVPitch;
+
+        float vStep = Height / (heightDataNRows -1);
+        float dy = (h_11 + 2*h01 + h11 - h_1_1 - 2*h0_1 - h1_1) / 4 / vStep;
         if (rowIdx < 0 || rowIdx >= heightDataNRows)
             dy *= 2;
         

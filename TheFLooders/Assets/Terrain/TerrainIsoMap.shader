@@ -1,9 +1,8 @@
 ﻿
-Shader "Terrain/FlatTerrainMixGeo"
+Shader "Terrain/TerrainIsoMap"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
         _MainColor ("Main color", Color) = (1, 0, 0, 1)
         _LineColor ("Line color", Color) = (0, 1, 0, 1)
         _LineYPeriod ("Line vertical periodicity", float) = 0.1
@@ -24,8 +23,7 @@ Shader "Terrain/FlatTerrainMixGeo"
                 float4 vertex : SV_POSITION;
                 float3 objSpacePos : TEXCOORD1;
             };
-            
-            sampler2D _MainTex;
+
             half4 _MainColor;
             half4 _LineColor;
             half _LineYPeriod;
@@ -47,8 +45,6 @@ Shader "Terrain/FlatTerrainMixGeo"
             // pixel shader, no inputs needed
             fixed4 frag (v2f i) : SV_Target
             {
-            	// const half sqrt3 = 1.73205080757;
-
                 // Extraction des infos passées au shader dans
                 // les canaux 3 et 4 des coordonnées UV.
                 // Il s'agit du gradient de la heightmap, interpollé entre chaque

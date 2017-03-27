@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Worldspace isolines
-  m_Shader: {fileID: 4800000, guid: 333e22f23e31748dd9a3816a96cecc49, type: 3}
+  m_Shader: {fileID: 4800000, guid: d7141a2a815269047af791d5514fd55c, type: 3}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
@@ -63,8 +63,8 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _LineWidth: 0.002
-    - _LineYPeriod: 0.13
+    - _LineWidth: 0.001
+    - _LineYPeriod: 3
     - _LinesSpacing: 4
     - _LinesWidth: 0.3
     - _Metallic: 0
@@ -72,7 +72,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SlopeSampleUVPitch: 0.01
-    - _Smoothness: 0.25
+    - _Smoothness: 0.565
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

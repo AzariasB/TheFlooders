@@ -257,8 +257,9 @@ public abstract class TerrainBuilder : MonoBehaviour
     /// </summary>
     private void ApplyModifiers()
     {        
-        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-        sw.Start();
+        //System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        //sw.Start();
+
         // Parcours des modificateurs pour voir jusqu'où ils se déclarent constants
         // Si aucun modificateur ne change, on prend le premier indice situé après
         // la fin de la pile.
@@ -349,10 +350,10 @@ public abstract class TerrainBuilder : MonoBehaviour
         // Mise à jour du mesh
         if (nApplied > 0)
         {
-            Debug.Log(GetType().Name + ": Application de " + nApplied.ToString() + " modificateur(s) de hauteur en " + sw.ElapsedMilliseconds + "ms.");
-            sw.Reset();
+            //Debug.Log(GetType().Name + ": Application de " + nApplied.ToString() + " modificateur(s) de hauteur en " + sw.ElapsedMilliseconds + "ms.");
+            //sw.Reset();
             RebuildGeometry();
-            Debug.Log(GetType().Name + ": Reconstruction de la géométrie en " + sw.ElapsedMilliseconds + "ms.");
+            //Debug.Log(GetType().Name + ": Reconstruction de la géométrie en " + sw.ElapsedMilliseconds + "ms.");
         }
     }
 

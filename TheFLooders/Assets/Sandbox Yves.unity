@@ -1934,7 +1934,7 @@ MonoBehaviour:
   _minSubdivisions: 50
   TargetMeshFilter: {fileID: 1773792168}
   TargetMeshCollider: {fileID: 0}
-  TerrainMaxHeight: 30
+  TerrainMaxHeight: 15
   _heightMapTexture: {fileID: 2800000, guid: 2da16db979aa248eaaac7097e0899325, type: 3}
 --- !u!4 &1773792170
 Transform:
@@ -1960,13 +1960,14 @@ GameObject:
   - component: {fileID: 2023079029}
   - component: {fileID: 2023079028}
   - component: {fileID: 2023079027}
+  - component: {fileID: 2023079031}
   m_Layer: 0
   m_Name: FloodPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &2023079027
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1980,7 +1981,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: a6fadad14d9c7ad429980d203ef28c6d, type: 2}
+  - {fileID: 2100000, guid: da3dae026a2883c4abe77c0f41fa38b2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2014,15 +2015,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 2023079026}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96040e50dc4dc2c489b0ef662bae46c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 88ba4bb3399de458e85feb414ffba642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _width: 100
-  _minSubdivisions: 50
+  _minSubdivisions: 10
   TargetMeshFilter: {fileID: 2023079028}
   TargetMeshCollider: {fileID: 0}
-  TerrainMaxHeight: 30
-  _heightMapTexture: {fileID: 2800000, guid: 2da16db979aa248eaaac7097e0899325, type: 3}
+  TerrainMaxHeight: 20
+  targetSolidTerrain: {fileID: 1773792169}
+  _initialHeight: -6
+  _generalRaiseSpeed: 0.03
+  _waveAngle: 10
+  _smoothing: 0.15
 --- !u!4 &2023079030
 Transform:
   m_ObjectHideFlags: 0
@@ -2036,6 +2041,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2023079031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2023079026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9b4063138e164efd9a078ce681ddaa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetRenderer: {fileID: 2023079027}
+  period: 2.5
+  alphaBlend: 0.5
+  baseOffset: {x: 0.25, y: 0}
+  slideDirection: {x: 0, y: 0.015}
 --- !u!1 &2119236152
 GameObject:
   m_ObjectHideFlags: 0

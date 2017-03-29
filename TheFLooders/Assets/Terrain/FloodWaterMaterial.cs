@@ -6,8 +6,8 @@ public class FloodWaterMaterial : MonoBehaviour {
 
     private const float DEFAULT_PERIOD = 3.0f;
     private const float DEFAULT_ALPHA_BLEND = 0.3f;
-    private const float DEFAULT_X_SLIDE = 0.25f;
-    private const float DEFAULT_Y_SLIDE = 0.0f;
+    private const float DEFAULT_X_SLIDE = 0.0f;
+    private const float DEFAULT_Y_SLIDE = 0.25f;
     private const float DEFAULT_X_BASE_OFFSET = 0.25f;
     private const float DEFAULT_Y_BASE_OFFSET = 0.0f;
 

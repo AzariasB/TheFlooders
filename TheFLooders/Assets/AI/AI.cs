@@ -105,7 +105,6 @@ public class AI : MonoBehaviour {
         if (IsDying())
         {
             //Dying sound
-            print("die");
             Destroy(gameObject);
             return;
         }

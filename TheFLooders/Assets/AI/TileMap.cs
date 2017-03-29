@@ -9,6 +9,8 @@ public class TileMap : MonoBehaviour {
 
     private GraphNode[][] _nodes;
 
+    [Tooltip("Générateur de terrain")]
+    public TerrainHeightMap solidTerain;
 
 
     private float _startX;
@@ -29,11 +31,9 @@ public class TileMap : MonoBehaviour {
             _nodes[i] = new GraphNode[NodeColumns];
         }
 
-        TerrainHeightMap heightMap = GameObject.Find("Terrain generator").GetComponent<TerrainHeightMap>();
 
-
-        _mapWidth = heightMap.Width;
-        _mapHeight = heightMap.Height;
+        _mapWidth = solidTerain.Width;
+        _mapHeight = solidTerain.Height;
 
         _stepX = _mapWidth / (NodeColumns);
         _stepZ = _mapHeight / (NodeRows);
@@ -48,7 +48,7 @@ public class TileMap : MonoBehaviour {
             {
                 float zPos = (z * _stepZ) + _startZ;
                 float xPos = (x * _stepX) + _startX;
-                float yPos = (float)heightMap.GetHeight(xPos, zPos);
+                float yPos = (float)solidTerain.GetHeight(xPos, zPos);
                 Vector3 nodePos = new Vector3(xPos, yPos, zPos);
                 //Check water height
                 _nodes[z][x] = new GraphNode(nodePos);
@@ -73,10 +73,11 @@ public class TileMap : MonoBehaviour {
     /// </summary>
     private void CheckBase()
     {
-//        Material redMat = Resources.Load("RedMaterial", typeof(Material)) as Material;
-        FloodControl Control = GameObject.Find("Flood water mover").GetComponent<FloodControl>();
 
-        float waterHeight = Control.stillWaterPlane.transform.position.y;
+        // TODO: Rework
+//        FloodControl Control = GameObject.Find("Flood water mover").GetComponent<FloodControl>();
+//        float waterHeight = Control.stillWaterPlane.transform.position.y;
+        float waterHeight = 0;
 
 
         //Shows all the nodes
@@ -217,7 +218,7 @@ public class TileMap : MonoBehaviour {
 
             if (g == to)
             {
-                print("Found dest");
+                // print("Found dest");
                 return TraverseOrder;
             }
                 

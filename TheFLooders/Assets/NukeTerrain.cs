@@ -18,7 +18,7 @@ public class NukeTerrain : MonoBehaviour {
             float bombX = target.Width*(Random.value * 2 - 1);
             float bombZ = target.Height*(Random.value * 2 - 1);
             float ampl = (Random.value - 0.5f) * 60;
-            target.ApplyOnZone(new Rect(bombX - 50, bombZ - 50, bombX + 50, bombZ + 50), source => {
+            target.ApplyOnZone(new Rect(bombX - 50, bombZ - 50, bombX + 50, bombZ + 50), (source, mag) => {
                 Vector3 epicenter = new Vector3(bombX, source.y, bombZ);
                 float dstSqr = 0.005f * (source - epicenter).sqrMagnitude;
                 float delta = ampl / (1 + dstSqr);

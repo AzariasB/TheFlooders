@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NukeTerrain : MonoBehaviour {
 
-    public TerrainHeightMap target;
+    public TerrainBuilder target;
 
 	// Use this for initialization
 	void Start () {
@@ -18,12 +18,32 @@ public class NukeTerrain : MonoBehaviour {
             float bombX = target.Width*(Random.value * 2 - 1);
             float bombZ = target.Height*(Random.value * 2 - 1);
             float ampl = (Random.value - 0.5f) * 60;
-            target.ApplyOnZone(new Rect(bombX - 50, bombZ - 50, bombX + 50, bombZ + 50), (source, mag) => {
-                Vector3 epicenter = new Vector3(bombX, source.y, bombZ);
-                float dstSqr = 0.005f * (source - epicenter).sqrMagnitude;
-                float delta = ampl / (1 + dstSqr);
-                return source.y + delta;
-            });
+            target.AddModifier(new NukeMod(new Vector3(bombX, 0, bombZ),ampl));
+            Debug.Log("Boum");
         }
 	}
+
+    private class NukeMod : HeightModifier {
+
+        public readonly float Amplitude;
+        public readonly Vector3 Epicenter;
+
+        public NukeMod(Vector3 epicenter, float amplitude) {
+            this.Amplitude = amplitude;
+            this.Epicenter = epicenter;
+        }
+
+        public override System.Single Apply(TerrainBuilder onTerrain, Vector3 atPosition)
+        {
+            Vector3 realEpicenter = new Vector3(Epicenter.x, atPosition.y, Epicenter.z);
+            float dstSqr = 0.005f * (atPosition - realEpicenter).sqrMagnitude;
+            float delta = Amplitude / (1 + dstSqr);
+            return atPosition.y + delta;
+        }
+
+        public override Rect GetAreaOfEffect()
+        {
+            return new Rect(new Vector2(Epicenter.x -25, Epicenter.z -25), new Vector2(50, 50));
+        }
+    }
 }

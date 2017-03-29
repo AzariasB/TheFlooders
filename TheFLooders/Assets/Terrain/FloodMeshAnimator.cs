@@ -6,46 +6,42 @@ public class FloodMeshAnimator : TerrainBuilder
 {
     [Tooltip("Le terrain pour lequel ce script génère un mesh d'inondation")]
     public TerrainHeightMap terrain;
+    private bool spentFrameWithNoTerrain;
 
-   
-    protected override void Start() {
-        base.Start();
-        
-        // Récupération du terrain pour lequel un mesh d'inondation sera généré
-        if (terrain == null)
-            terrain = GetComponent<TerrainHeightMap>();
-        if (terrain == null)
+    protected override void Awake()
+    {
+        base.Awake();
+        spentFrameWithNoTerrain = false;
+        AddModifier(new WaterHeightModifier(this));
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        if (terrain != null)
         {
-            Debug.LogError("Impossible de trouver le terrain cible pour créer un mesh d'inondation");
-            enabled = false;
-            return;
+            // On recopie toujours le terrain parent.
+            Width = terrain.Width;
         }
-
-        // Le terrain s'initialise dans son Start().
-        // Ce script devrait s'exécuter après, via les réglages de ScriptExecutionOrder du projet.
-        // Mais au cas où ça ne serait pas fait, on attend une frame.
-        // Typiquement un terrain non initialisé aura Width == Height == 0.
-        if (terrain.Height > 0 && terrain.Width > 0) {
-            RebuildTerrain();
-        } else {
-            Debug.LogWarning("Le terrain cible ne semble pas initialisé. Il devrait être placé avant ce script dans l'ordre d'exécution du projet Unity");
-            StartCoroutine(RebuildTerrainAfterOneFrame());
+        else
+        {
+            // Tentative de réparation : s'il y a un terrain solide sur le même GameObject on se greffe dessus.
+            terrain = GetComponent<TerrainHeightMap>();
+            if (terrain == null)
+            {
+                if (!spentFrameWithNoTerrain)
+                    spentFrameWithNoTerrain = true;
+                else
+                {
+                    Debug.LogError("Impossible de trouver le terrain cible pour créer un mesh d'inondation");
+                    enabled = false;
+                    return;
+                }
+            }
         }
     }
 
-    /// <summary>
-    /// Cette coroutine attend une frame avant de calculer le mesh, au cas où l'ordre d'exécution
-    /// des scripts soit mal réglé.
-    /// </summary>
-    private IEnumerator RebuildTerrainAfterOneFrame() {
-        // On attend une frame
-        yield return null;
-
-        // Puis on lance l'action
-        RebuildTerrain();
-    }
-
-    protected override float ComputeTerrainHeight(float width)
+    protected override float ComputeTerrainZDimension(float width)
     {
         float res = 0;
         if (terrain != null && terrain.Width != 0)
@@ -53,8 +49,35 @@ public class FloodMeshAnimator : TerrainBuilder
         return res;
     }
 
-    protected override float SampleBaseHeight(float relativeX, float relativeY) {
-        return 0;
+    /// <summary>
+    /// Modificateur de base pour le plan d'inondation, qui fait monter
+    /// le niveau petit à petit.
+    /// </summary>
+    private class WaterHeightModifier : HeightModifier {
+        
+        private readonly TerrainBuilder target;
+
+        public WaterHeightModifier(TerrainBuilder target) {
+            this.target = target;
+        }
+
+        public override bool IsChanging
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public override Rect GetAreaOfEffect()
+        {
+            return new Rect(new Vector2(target.Width/2, target.Height/2), new Vector2(target.Width, target.Height));
+        }
+
+        public override float Apply(TerrainBuilder onTerrain, Vector3 atPosition)
+        {
+            return 5;
+        }
     }
 
 }

@@ -7,64 +7,27 @@ public class TerrainHeightMap : TerrainBuilder
     [Tooltip ("Image source pour la carte de hauteur")]
     [SerializeField]
     private Texture2D _heightMapTexture = null;
-    public Texture2D HeightMapTexture {
+    public Texture2D HeightMapTexture { 
         get {
             return _heightMapTexture;
         }
         set {
-            if (_heightMapTexture != value) {
-                _heightMapTexture = value;
-                RebuildTerrain ();
-            }
+            _heightMapTexture = value;
         }
     }
 
-    /// <summary>
-    /// Obtient la hauteur du terrain aux coordonnées spécifiées.
-    /// </summary>
-    public double GetHeight (float x, float z)
+    protected override void Awake ()
     {
-        double res = 0;
-        if (_heightMapTexture != null) {
-            int pixelXIdx = (int)((x + Width/2) / Width * _heightMapTexture.width);
-            int pixelZIdx = (int)((z + Height/2) / Height * _heightMapTexture.height);
-            Color c = _heightMapTexture.GetPixel (pixelXIdx, pixelZIdx);
-            res = c.grayscale * TerrainMaxHeight;
-        }
-        return res;
+        base.Awake();
+        AddModifier(new BaseHeightModifier(this));
     }
 
-    protected override void Start ()
-    {
-        base.Start();
-        RebuildTerrain ();
-    }
-
-    private Color SampleHeightMap(float uvx, float uvy) { 
-        int pixelXIdx = (int)(uvx * _heightMapTexture.width); 
-        if (pixelXIdx < 0) 
-            pixelXIdx = 0; 
-        if (pixelXIdx > _heightMapTexture.width - 1) 
-            pixelXIdx = _heightMapTexture.width - 1; 
-        int pixelYIdx = (int)(uvy * _heightMapTexture.height); 
-        if (pixelYIdx < 0) 
-            pixelYIdx = 0; 
-        if (pixelYIdx > _heightMapTexture.height - 1) 
-            pixelYIdx = _heightMapTexture.height - 1; 
-        return _heightMapTexture.GetPixel (pixelXIdx, pixelYIdx); 
-    }
-
-    protected override float ComputeTerrainHeight(float width)
+    protected override float ComputeTerrainZDimension(float width)
     {
         float res = 0;
         if (_heightMapTexture != null && _heightMapTexture.width != 0)
             res = Width * _heightMapTexture.height / _heightMapTexture.width;
         return res;
-    }
-
-    protected override float SampleBaseHeight(float relativeX, float relativeY) {
-        Color c = SampleHeightMap(relativeX, relativeY); 
-        return (c.grayscale -0.5f) * TerrainMaxHeight;
     }
 
     protected override void OnGeometryChanged()
@@ -79,6 +42,72 @@ public class TerrainHeightMap : TerrainBuilder
             }
         }
         HeightMapMesh.SetUVs(1, gradients);
+    }
+
+    /// <summary>
+    /// Modificateur qui calcule la hauteur de base du terrain
+    /// </summary>
+    private class BaseHeightModifier : HeightModifier {
+
+        public TerrainHeightMap target;
+        private Texture2D lastSampledTexture;
+
+        public BaseHeightModifier(TerrainHeightMap target) {
+            this.target = target;
+            if (target == null) {
+                throw new ArgumentNullException();
+            }
+        }
+
+        public override System.Boolean IsChanging
+        {
+            get
+            {
+                return target.HeightMapTexture != lastSampledTexture;
+            }
+        }
+
+        public override Rect GetAreaOfEffect()
+        {
+            return new Rect(new Vector2(-target.Width/2, -target.Height/2), new Vector2(target.Width, target.Height));
+        }
+
+        public override float Apply(TerrainBuilder onTerrain, Vector3 atPosition)
+        {
+            float relativeX;
+            float relativeZ;
+            if (target.Width > 0 && target.Height > 0)
+            {
+                relativeX = (atPosition.x + target.Width / 2) / target.Width;
+                relativeZ = (atPosition.z + target.Height / 2) / target.Height;
+            }
+            else
+            {
+                relativeX = 0;
+                relativeZ = 0;
+            }
+            Color c = SampleHeightMap(relativeX, relativeZ); 
+            float res = (c.grayscale -0.5f) * target.TerrainMaxHeight;
+            return res;
+        }
+
+        private Color SampleHeightMap(float uvx, float uvy) {
+            lastSampledTexture = target.HeightMapTexture;
+            if (target.HeightMapTexture == null)
+                return Color.black;
+            
+            int pixelXIdx = (int)(uvx * target.HeightMapTexture.width); 
+            if (pixelXIdx < 0) 
+                pixelXIdx = 0; 
+            if (pixelXIdx > target.HeightMapTexture.width - 1) 
+                pixelXIdx = target.HeightMapTexture.width - 1; 
+            int pixelYIdx = (int)(uvy * target.HeightMapTexture.height); 
+            if (pixelYIdx < 0) 
+                pixelYIdx = 0; 
+            if (pixelYIdx > target.HeightMapTexture.height - 1) 
+                pixelYIdx = target.HeightMapTexture.height - 1;
+            return target.HeightMapTexture.GetPixel (pixelXIdx, pixelYIdx); 
+        }
     }
 
 }

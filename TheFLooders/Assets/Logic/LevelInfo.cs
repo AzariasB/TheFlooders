@@ -41,18 +41,15 @@ public class LevelInfo : MonoBehaviour {
             _instance = value;
         }
     }
-
-
-
     private static LevelInfo _instance;
 
-	// Use this for initialization
-	void Start () {
+    /// <summary>
+    /// Terrain du niveau. Le composant qui s'occupe du terrain devrait
+    /// s'enregistrer ici quand il exécute Start().
+    /// </summary>
+    public TerrainHeightMap Ground { get; set; }
+
+	protected virtual void Awake () {
         Instance = this;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

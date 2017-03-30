@@ -21,7 +21,7 @@ public class DestroyCity : MonoBehaviour {
 		{   if (destructionSound != null) {
 				destructionSound.Play();
 			}
-            GameObject.Find("cityDestroyText").GetComponent<TextBinding>().Decrement();
+            GameObject.Find("cityDestroyText").GetComponent<PowerUsesCounter>().Decrement();
         }
 //        _isDestroying = false;
         foreach(GameObject city in GameObject.FindGameObjectsWithTag("City"))
@@ -32,7 +32,7 @@ public class DestroyCity : MonoBehaviour {
             }
             Destroy(city.GetComponent<ClickChangeMaterial>());
         }
-        TextBinding.EnableButtons();
+        PowerUsesCounter.EnableButtons();
 
 	
     }
@@ -47,11 +47,11 @@ public class DestroyCity : MonoBehaviour {
 
     public void DestroyCityTask()
     {
-        if(GameObject.Find("cityDestroyText").GetComponent<TextBinding>().CanDecrement() )
+        if(GameObject.Find("cityDestroyText").GetComponent<PowerUsesCounter>().CanDecrement() )
         {
 //            _isDestroying = true;
             Material ruinMaterial = Resources.Load("RuinMaterial", typeof(Material)) as Material;
-            TextBinding.DisableButtons();
+            PowerUsesCounter.DisableButtons();
 			if (selectionSound != null) {
 				selectionSound.Play();
 			}

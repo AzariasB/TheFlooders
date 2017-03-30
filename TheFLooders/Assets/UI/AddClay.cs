@@ -21,7 +21,7 @@ public class AddClay : MonoBehaviour {
 
     void AddClayTask()
     {
-        if((GameObject.Find("clay_text").GetComponent<TextBinding>() as TextBinding).CanDecrement())
+        if((GameObject.Find("clay_text").GetComponent<PowerUsesCounter>() as PowerUsesCounter).CanDecrement())
         {
             GameObject nwObj = GameObject.CreatePrimitive(PrimitiveType.Plane);
             nwObj.transform.localScale = new Vector3(2, 2, 2);
@@ -35,7 +35,7 @@ public class AddClay : MonoBehaviour {
             //First destroy collider, to avoid pushing 
             Destroy(nwObj.GetComponent<Collider>());
 
-            TextBinding.DisableButtons();
+            PowerUsesCounter.DisableButtons();
 			AudioSource asource = GetComponent <AudioSource> ();
 			if (asource != null) {
 				asource.Play();

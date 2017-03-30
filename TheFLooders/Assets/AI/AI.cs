@@ -51,7 +51,7 @@ public class AI : MonoBehaviour {
             print("ended");
             Destroy(gameObject);
             //Increase survivors
-            GameObject.Find("saved_player_text").GetComponent<TextBinding>().Increment();
+            GameObject.Find("saved_player_text").GetComponent<PowerUsesCounter>().Increment();
         }
     }
 

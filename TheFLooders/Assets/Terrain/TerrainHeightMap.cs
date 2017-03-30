@@ -22,6 +22,12 @@ public class TerrainHeightMap : TerrainBuilder
         AddModifier(new BaseHeightModifier(this));
     }
 
+    protected virtual void Start() {
+        LevelInfo lInfo = LevelInfo.Instance;
+        if (lInfo != null)
+            lInfo.Ground = this;
+    }
+
     protected override float ComputeTerrainZDimension(float width)
     {
         float res = 0;

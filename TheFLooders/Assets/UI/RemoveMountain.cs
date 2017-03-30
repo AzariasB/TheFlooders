@@ -37,7 +37,7 @@ public class RemoveMountain : MonoBehaviour {
         GameObject[] mountains = GameObject.FindGameObjectsWithTag("Mountain");
         if(mountains.Length > 0)
         {
-            TextBinding.DisableButtons();
+            PowerUsesCounter.DisableButtons();
             foreach(GameObject mountain in mountains)
             {
                 mountain.AddComponent<ClickDestroy>();

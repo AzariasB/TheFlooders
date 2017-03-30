@@ -20,7 +20,7 @@ public class AddSilt : MonoBehaviour {
 
     void AddSiltTask()
     {
-        if ((GameObject.Find("siltText").GetComponent<TextBinding>() as TextBinding).CanDecrement())
+        if ((GameObject.Find("siltText").GetComponent<PowerUsesCounter>() as PowerUsesCounter).CanDecrement())
         {
             GameObject nwObj = GameObject.CreatePrimitive(PrimitiveType.Plane);
             nwObj.transform.localScale = new Vector3(2, 2, 2);
@@ -35,7 +35,7 @@ public class AddSilt : MonoBehaviour {
             //First destroy collider, to avoid pushing 
             Destroy(nwObj.GetComponent<Collider>());
 
-            TextBinding.DisableButtons();
+            PowerUsesCounter.DisableButtons();
 			AudioSource asource = GetComponent <AudioSource> ();
 			if (asource != null) {
 				asource.Play();

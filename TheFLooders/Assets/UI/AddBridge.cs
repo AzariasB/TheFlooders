@@ -22,7 +22,7 @@ public class AddBridge : MonoBehaviour {
     void AddBrigeTask()
     {
         //Check if remain enough bridges
-        if((GameObject.Find("bridge_text").GetComponent<TextBinding>() as TextBinding).CanDecrement())
+        if((GameObject.Find("bridge_text").GetComponent<PowerUsesCounter>() as PowerUsesCounter).CanDecrement())
         {
             GameObject nwBrige = GameObject.CreatePrimitive(PrimitiveType.Plane);
 
@@ -40,7 +40,7 @@ public class AddBridge : MonoBehaviour {
             nwBrige.layer = LayerMask.NameToLayer("Ignore Raycast");
             nwBrige.AddComponent<PlaceBridge>();
 
-            TextBinding.DisableButtons();
+            PowerUsesCounter.DisableButtons();
 			AudioSource asource = GetComponent <AudioSource> ();
 			if (asource != null) {
 				asource.Play();

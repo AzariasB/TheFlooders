@@ -19,7 +19,7 @@ public class ClickChangeMaterial : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
-            TextBinding.EnableButtons();
+            PowerUsesCounter.EnableButtons();
             gameObject.GetComponent<Renderer>().material = NwMaterial;
             GameObject.Find("destroy_city").GetComponent<DestroyCity>().EndDestroying(gameObject);
         }

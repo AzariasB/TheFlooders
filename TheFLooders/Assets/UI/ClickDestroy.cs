@@ -18,7 +18,7 @@ public class ClickDestroy : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
-            TextBinding.EnableButtons();
+            PowerUsesCounter.EnableButtons();
             (GameObject.Find("destroy_mountain").GetComponent < RemoveMountain >() as RemoveMountain).EndDeletion();//Notify the button
             Destroy(gameObject);
         }

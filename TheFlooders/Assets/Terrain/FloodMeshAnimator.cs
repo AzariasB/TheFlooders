@@ -152,26 +152,44 @@ public class FloodMeshAnimator : TerrainBuilder
 
             if (gotLevelinfo)
             {
-                float frontPos = target.targetSolidTerrain.Height / 2 + (Time.time - _startTime) * _waveSpeed;
+                // Avancée de la crue, et position du point sur l'axe de crue (qui se déplace vers -z)
+                float frontPos = target.targetSolidTerrain.Height / 2 - (_startTime - Time.time) * _waveSpeed;
                 float pointPos = atPosition.z;
-
-                // Hauteurs de chaque plan
-                float unfloodedHeight = target.InitialHeight + target.GeneralRaiseSpeed * Time.time;
-                float floodedHeight = target.InitialHeight + (pointPos - frontPos) * Mathf.Tan(target.WaveAngle * Mathf.PI / 180);
 
                 // Paramètre d'interpolation entre les deux plans.
                 float alpha;
                 if (_smoothLength > 0)
-                    alpha = (pointPos - frontPos) / _smoothLength + 0.5f;
+                    alpha = (frontPos - pointPos) / _smoothLength + 0.5f;
                 else
                     alpha = (pointPos > frontPos ? 1 : 0);
-
-                alpha = Mathf.Clamp01(alpha);
-                float alpha2 = alpha * alpha;
-                float finalHeight = alpha2 * floodedHeight + (1 - alpha2) * unfloodedHeight;
+                
+                // Calcul de la hauteur
+                float finalHeight;
+                float unfloodedHeight = target.InitialHeight + target.GeneralRaiseSpeed * (Time.time - _startTime);
+                if (alpha <= 0)
+                {
+                    // 100% zone de crue
+                    finalHeight = unfloodedHeight + (pointPos - frontPos) * Mathf.Tan(target.WaveAngle * Mathf.PI / 180);
+                }
+                else if (alpha >= 1)
+                {
+                    // 100% zone "normale" (qui monte quand même au fil du temps)
+                    finalHeight = unfloodedHeight;
+                }
+                else
+                {
+                    /* Mix entre crue et normal :
+                     * on échantillonne le plan de crue en arrière, le plan normal en avant,
+                     * de (smoothing / 2) dans chaque sens, et on prend le point final
+                     * sur la corde qui relie les deux (ce qui revient à faire une moyenne
+                     * car on prend le milieu de la corde). */
+                    float backwardSamplingAbscissa = pointPos + _smoothLength * 0.5f;
+                    float floodedHeight = unfloodedHeight + (backwardSamplingAbscissa - frontPos) * Mathf.Tan(target.WaveAngle * Mathf.PI / 180);
+                    finalHeight = 0.5f * (floodedHeight + unfloodedHeight);
+                }
 
                 // Ce modificateur est censé donner la hauteur de base du terrain, donc
-                // il ignore la valeur de hauteur précédente.
+                // il ignore la valeur de hauteur précédente (atPosition.y).
                 return finalHeight;
             }
             else

@@ -35,7 +35,7 @@ public class AddMountain : MonoBehaviour {
             Material mountainMaterial = Resources.Load("Mountain_Material", typeof(Material)) as Material;
             nwObj.GetComponent<Renderer>().material = mountainMaterial;
 
-            nwObj.AddComponent<PlaceMountain>();
+            nwObj.AddComponent<MountainPlacer>();
 
             TextBinding.DisableButtons();
 			AudioSource asource = GetComponent <AudioSource> ();

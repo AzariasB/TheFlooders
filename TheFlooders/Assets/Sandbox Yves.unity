@@ -1993,8 +1993,8 @@ MonoBehaviour:
   TerrainMaxHeight: 20
   targetSolidTerrain: {fileID: 1773792169}
   _initialHeight: -6
-  _generalRaiseSpeed: 0.03
-  _waveAngle: 10
+  _generalRaiseSpeed: 0.06
+  _waveAngle: 5
   _smoothing: 0.15
 --- !u!4 &2023079030
 Transform:

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -135,11 +136,17 @@ public abstract class TerrainBuilder : MonoBehaviour
     /// </summary>
     private List<HeightModifier> _modifierStack;
 
+    /// <summary>
+    /// Modificateurs dont l'application a levé une exception.
+    /// </summary>
+    private List<WeakReference> _failedMods;
+
     protected virtual void Awake()
     {
         _heightMapMesh = new Mesh();
         _heightMapMesh.name = "AltitudeMesh";
         _modifierStack = new List<HeightModifier>();
+        _failedMods = new List<WeakReference>();
         RebuildTerrain();
     }
 
@@ -364,52 +371,91 @@ public abstract class TerrainBuilder : MonoBehaviour
     {
         if (IsEmpty)
             return;
-        
-        Rect targetZone = modifier.GetAreaOfEffect();
 
-        // Détermination des indices concernés
-        int colIndexMin = Mathf.CeilToInt(Mathf.Clamp((targetZone.xMin + Width / 2) / Width * (HeightDataColCount - 1), 0, HeightDataColCount - 1));
-        int colIndexMax = (int)Mathf.Clamp((targetZone.xMax + Width / 2) / Width * (HeightDataColCount - 1), 0, HeightDataColCount - 1);
-        int rowIndexMin = Mathf.CeilToInt(Mathf.Clamp((targetZone.yMin + Height / 2) / Height * (HeightDataRowCount - 1), 0, HeightDataRowCount - 1));
-        int rowIndexMax = (int)Mathf.Clamp((targetZone.yMax + Height / 2) / Height * (HeightDataRowCount - 1), 0, HeightDataRowCount - 1);
-        if (colIndexMax < colIndexMin || rowIndexMax < rowIndexMin)
-            return;
+        try {
+            Rect targetZone = modifier.GetAreaOfEffect();
 
-        // Copie de la zone affectée pour faire les modifs sans changer
-        // l'état courant.
-        float[][] copy = new float[colIndexMax - colIndexMin + 1][];
-        for (int i = 0; i < colIndexMax - colIndexMin + 1; i++)
-            copy[i] = new float[rowIndexMax - rowIndexMin + 1];
+            // Détermination des indices concernés
+            int colIndexMin = Mathf.CeilToInt(Mathf.Clamp((targetZone.xMin + Width / 2) / Width * (HeightDataColCount - 1), 0, HeightDataColCount - 1));
+            int colIndexMax = (int)Mathf.Clamp((targetZone.xMax + Width / 2) / Width * (HeightDataColCount - 1), 0, HeightDataColCount - 1);
+            int rowIndexMin = Mathf.CeilToInt(Mathf.Clamp((targetZone.yMin + Height / 2) / Height * (HeightDataRowCount - 1), 0, HeightDataRowCount - 1));
+            int rowIndexMax = (int)Mathf.Clamp((targetZone.yMax + Height / 2) / Height * (HeightDataRowCount - 1), 0, HeightDataRowCount - 1);
+            if (colIndexMax < colIndexMin || rowIndexMax < rowIndexMin)
+                return;
 
-        for (int colIndex = colIndexMin; colIndex <= colIndexMax; colIndex++)
-        {
-            for (int rowIndex = rowIndexMin; rowIndex <= rowIndexMax; rowIndex++)
+            // Copie de la zone affectée pour faire les modifs sans changer
+            // l'état courant.
+            float[][] copy = new float[colIndexMax - colIndexMin + 1][];
+            for (int i = 0; i < colIndexMax - colIndexMin + 1; i++)
+                copy[i] = new float[rowIndexMax - rowIndexMin + 1];
+
+            for (int colIndex = colIndexMin; colIndex <= colIndexMax; colIndex++)
             {
-                copy[colIndex - colIndexMin][rowIndex - rowIndexMin] = toHeightData[colIndex][rowIndex];
+                for (int rowIndex = rowIndexMin; rowIndex <= rowIndexMax; rowIndex++)
+                {
+                    copy[colIndex - colIndexMin][rowIndex - rowIndexMin] = toHeightData[colIndex][rowIndex];
+                }
+            }
+
+            // Passage de l'opérateur
+            for (int colIndex = colIndexMin; colIndex <= colIndexMax; colIndex++)
+            {
+                for (int rowIndex = rowIndexMin; rowIndex <= rowIndexMax; rowIndex++)
+                {
+                    Vector3 position = new Vector3(
+                        ((float)colIndex / HeightDataColCount - 0.5f) * Width,
+                        toHeightData[colIndex][rowIndex],
+                        ((float)rowIndex / HeightDataRowCount - 0.5f) * Height);
+                    copy[colIndex - colIndexMin][rowIndex - rowIndexMin] = modifier.Apply(this, position);
+                }
+            }
+
+            // Recopie des nouvelles données, modification de l'état courant.
+            for (int colIndex = colIndexMin; colIndex <= colIndexMax; colIndex++)
+            {
+                for (int rowIndex = rowIndexMin; rowIndex <= rowIndexMax; rowIndex++)
+                {
+                    toHeightData[colIndex][rowIndex] = copy[colIndex - colIndexMin][rowIndex - rowIndexMin];
+                }
+            }
+        } catch (Exception e) {
+            if (RegisterFailedMod(modifier))
+            {
+                Debug.LogError(GetType().ToString() + " - Un modificateur a échoué (ce message est affiché " +
+                    "une seule fois par instance de modificateur défaillante) : " + Environment.NewLine + e.ToString());
             }
         }
+    }
 
-        // Passage de l'opérateur
-        for (int colIndex = colIndexMin; colIndex <= colIndexMax; colIndex++)
+    /// <summary>
+    /// Enregistre un modificateur dans la liste des modificateurs qui ont
+    /// levé une exception, s'il n'y était pas déjé. Renvoie vrai si et seulement
+    /// si le modificateur a été ajouté à la liste (et donc qu'il n'était pas déjà présent)
+    /// </summary>
+    private bool RegisterFailedMod(HeightModifier failedMod) {
+        bool added = false;
+        bool alreadyThere = false;
+        int i = _failedMods.Count - 1;
+
+        // Nettoyage des éventuelles références mortes, tout en
+        // recherchant le modificateur dans la liste
+        while (i >= 0 && !alreadyThere)
         {
-            for (int rowIndex = rowIndexMin; rowIndex <= rowIndexMax; rowIndex++)
-            {
-                Vector3 position = new Vector3(
-                                       ((float)colIndex / HeightDataColCount - 0.5f) * Width,
-                                       toHeightData[colIndex][rowIndex],
-                                       ((float)rowIndex / HeightDataRowCount - 0.5f) * Height);
-                copy[colIndex - colIndexMin][rowIndex - rowIndexMin] = modifier.Apply(this, position);
-            }
+            HeightModifier hMod = (HeightModifier) _failedMods[i].Target;
+            if (hMod == null)
+                _failedMods.RemoveAt(i);
+            else if (ReferenceEquals(hMod, failedMod))
+                alreadyThere = true;
         }
 
-        // Recopie des nouvelles données, modification de l'état courant.
-        for (int colIndex = colIndexMin; colIndex <= colIndexMax; colIndex++)
+        // Ajout si non déjà présent
+        if (!alreadyThere)
         {
-            for (int rowIndex = rowIndexMin; rowIndex <= rowIndexMax; rowIndex++)
-            {
-                toHeightData[colIndex][rowIndex] = copy[colIndex - colIndexMin][rowIndex - rowIndexMin];
-            }
+            _failedMods.Add(new WeakReference(failedMod));
+            added = true;
         }
+
+        return added;
     }
 
     /// <summary>

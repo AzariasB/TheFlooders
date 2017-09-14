@@ -9,47 +9,47 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1483603061434414}
+  m_RootGameObject: {fileID: 1274299859539342}
   m_IsPrefabParent: 1
---- !u!1 &1483603061434414
+--- !u!1 &1274299859539342
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4168165799852692}
-  - component: {fileID: 114451413618880168}
+  - component: {fileID: 4456320125299894}
+  - component: {fileID: 114305696221994152}
   m_Layer: 0
-  m_Name: Mountain power
+  m_Name: remove_mountain_power
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4168165799852692
+--- !u!4 &4456320125299894
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1483603061434414}
+  m_GameObject: {fileID: 1274299859539342}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 29.89838, y: 61.295433, z: 9.535027}
+  m_LocalPosition: {x: -1.4269052, y: 1.2186882, z: 0.9562688}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114451413618880168
+--- !u!114 &114305696221994152
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1483603061434414}
+  m_GameObject: {fileID: 1274299859539342}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a04f31b8b03fc43a49f873bf6104969b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   modifier_size: 25
-  modifier_height: 10
+  modifier_height: -10

@@ -36,7 +36,7 @@ public class AI : MonoBehaviour {
     {
         foreach(GraphNode g in _path)
         {
-            //g.DebugTrace();
+            g.DebugTrace();
         }
     }
 
@@ -51,7 +51,8 @@ public class AI : MonoBehaviour {
             print("ended");
             Destroy(gameObject);
             //Increase survivors
-            GameObject.Find("saved_player_text").GetComponent<PowerUsesCounter>().Increment();
+			Debug.Log("Finished !");
+			//GameObject.Find("saved_player_text").GetComponent<PowerUsesCounter>().Increment();
         }
     }
 
@@ -93,6 +94,9 @@ public class AI : MonoBehaviour {
 
         //Ray ray = Camera.main.ScreenPointToRay(mNode.Position);
         rayCast = Physics.Raycast(origin, direction, out hitPoint, Mathf.Infinity);
+		if (rayCast)
+			Debug.Log ("AI SINKED"  + hitPoint.collider.gameObject.name);
+
         if (rayCast && hitPoint.collider.gameObject.name != "Terrain generator")//Can't see it => underwater
         {
             return true;

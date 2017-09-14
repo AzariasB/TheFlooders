@@ -23,6 +23,12 @@ public class TileMap : MonoBehaviour {
     public int NodeRows;
     public int NodeColumns;
 
+	void Start(){
+		//Debug print
+		CheckBase();
+	}
+
+
 	// Use this for initialization
 	void Awake () {
         _nodes = new GraphNode[NodeRows][];
@@ -63,9 +69,7 @@ public class TileMap : MonoBehaviour {
                 GenerateEdge(x, z);
             }
         }
-
-        //Debug print
-        CheckBase();
+			
 	}
 
     /// <summary>
@@ -75,9 +79,7 @@ public class TileMap : MonoBehaviour {
     {
 
         // TODO: Rework
-//        FloodControl Control = GameObject.Find("Flood water mover").GetComponent<FloodControl>();
-//        float waterHeight = Control.stillWaterPlane.transform.position.y;
-        float waterHeight = 0;
+//        float waterHeight = 0;
 
 
         //Shows all the nodes
@@ -88,6 +90,7 @@ public class TileMap : MonoBehaviour {
                 GraphNode mNode = _nodes[z][x];
                 if (mNode != null)
                 {
+					float waterHeight = LevelInfo.Instance.Ground_eau.GetHeight (mNode.Position.x, mNode.Position.z);
                     if(mNode.Position.y <= waterHeight)
                     {
                         mNode.Sink();
@@ -164,39 +167,41 @@ public class TileMap : MonoBehaviour {
 
 
                 GraphNode mNode = _nodes[z][x];
-                if (mNode != null)
-                {
-                    foreach (Edge e in mNode.Edges)
-                    {
-                        if (e.IsNode1(mNode))
-                        {
-                            Debug.DrawLine(mNode.Position, e.Node2.Position, Color.green);
-                        }
-                    }
+				if (mNode != null) {
+					foreach (Edge e in mNode.Edges) {
+						if (e.IsNode1 (mNode)) {
+							Debug.DrawLine (mNode.Position, e.Node2.Position, Color.green);
+						}
+					}
 
-                    if (!mNode.Sinked)
-                    {
-                        bool rayCast;
-                        RaycastHit hitPoint;
+					if (!mNode.Sinked) {
+						float height = LevelInfo.Instance.Ground_eau.GetHeight (mNode.Position.x, mNode.Position.z);
+						if (mNode.Position.y <= height)
+							mNode.Sink ();
 
-                        Vector3 target = mNode.Position;
-                        Vector3 flatMapPosition = GameObject.Find("FlatMap").gameObject.transform.position;
-                        Vector3 origin = new Vector3(target.x, flatMapPosition.y - 5, target.z);
-                        Vector3 direction = target - origin;
+//						bool rayCast;
+//						RaycastHit hitPoint;
+//
+//						Vector3 target = mNode.Position;
+//						Vector3 flatMapPosition = GameObject.Find ("FlatMap").gameObject.transform.position;
+//						Vector3 origin = new Vector3 (target.x, flatMapPosition.y - 5, target.z);
+//						Vector3 direction = target - origin;
+//
+//						Debug.DrawRay (origin, direction);
+//
+//						//Ray ray = Camera.main.ScreenPointToRay(mNode.Position);
+//						rayCast = Physics.Raycast (origin, direction, out hitPoint, Mathf.Infinity);
+//
+//
+//						if (rayCast)
+//							Debug.Log ("GraphNode" +   hitPoint.collider.gameObject.name);
+//						if (rayCast && hitPoint.collider.gameObject.name != "HeightMap") {//Can't see it => underwater
+//							//Debug.DrawLine(origin, hitPoint.collider.gameObject.transform.position, Color.red);
+//							mNode.Sink ();
+//						}
 
-                        Debug.DrawRay(origin, direction);
-
-
-                        //Ray ray = Camera.main.ScreenPointToRay(mNode.Position);
-                        rayCast = Physics.Raycast(origin, direction,out hitPoint, Mathf.Infinity);
-                        if (rayCast &&  hitPoint.collider.gameObject.name != "HeightMap")//Can't see it => underwater
-                        {
-                            //Debug.DrawLine(origin, hitPoint.collider.gameObject.transform.position, Color.red);
-                            mNode.Sink();
-                        }
-
-                    }
-                }
+					}
+				}
 
 
             }

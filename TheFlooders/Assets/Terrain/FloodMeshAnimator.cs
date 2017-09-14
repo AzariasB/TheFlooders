@@ -52,6 +52,8 @@ public class FloodMeshAnimator : TerrainBuilder
         base.Awake();
         spentFrameWithNoTerrain = false;
         AddModifier(new WaterHeightModifier(this));
+		LevelInfo lInfo = LevelInfo.Instance;
+		lInfo.Ground_eau = this; 
     }
 
     protected override void Update()

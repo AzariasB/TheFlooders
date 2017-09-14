@@ -8,6 +8,11 @@ using UnityEngine.UI;
 /// </summary>
 public class AddClay : MonoBehaviour {
 
+	public Material Clay{ get; set; }
+	private Material clay = null;
+	[SerializeField]
+	private Material _clay = null;
+
 	// Use this for initialization
 	void Start () {
         Button button = GetComponent<Button>();
@@ -16,6 +21,9 @@ public class AddClay : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (_clay != clay) {
+			Clay = _clay;
+		}
 		
 	}
 
@@ -29,8 +37,10 @@ public class AddClay : MonoBehaviour {
             nwObj.AddComponent<PlaceClay>();
 
             //
-            Material mountainMaterial = Resources.Load("ArgileMaterial", typeof(Material)) as Material;
-            nwObj.GetComponent<Renderer>().material = mountainMaterial;
+            //Material mountainMaterial = Resources.Load("ArgileMaterial", typeof(Material)) as Material;
+            //nwObj.GetComponent<Renderer>().material = mountainMaterial;
+
+			nwObj.GetComponent<Renderer>().material = Clay;
 
             //First destroy collider, to avoid pushing 
             Destroy(nwObj.GetComponent<Collider>());

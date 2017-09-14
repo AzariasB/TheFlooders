@@ -8,6 +8,11 @@ using UnityEngine.UI;
 /// </summary>
 public class AddSilt : MonoBehaviour {
 
+	public Material Silt{ get; set; }
+	private Material silt = null;
+	[SerializeField]
+	private Material _silt = null;
+
 	// Use this for initialization
 	void Start () {
         GetComponent<Button>().onClick.AddListener(AddSiltTask);
@@ -15,6 +20,9 @@ public class AddSilt : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (_silt != silt) {
+			Silt = _silt;
+		}
 		
 	}
 
@@ -29,8 +37,10 @@ public class AddSilt : MonoBehaviour {
             nwObj.tag = "Silt";
 
             //
-            Material mountainMaterial = Resources.Load("SiltMaterial", typeof(Material)) as Material;
-            nwObj.GetComponent<Renderer>().material = mountainMaterial;
+            //Material mountainMaterial = Resources.Load("SiltMaterial", typeof(Material)) as Material;
+            //nwObj.GetComponent<Renderer>().material = mountainMaterial;
+
+			nwObj.GetComponent<Renderer>().material = Silt;
 
             //First destroy collider, to avoid pushing 
             Destroy(nwObj.GetComponent<Collider>());

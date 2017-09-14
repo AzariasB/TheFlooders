@@ -43,11 +43,14 @@ public class LevelInfo : MonoBehaviour {
     }
     private static LevelInfo _instance;
 
+
     /// <summary>
     /// Terrain du niveau. Le composant qui s'occupe du terrain devrait
     /// s'enregistrer ici quand il exécute Start().
     /// </summary>
-    public TerrainHeightMap Ground { get; set; }
+    public TerrainHeightMap Ground { get; set; } 
+
+	public FloodMeshAnimator Ground_eau { get; set; } //pareil mais pour le plan d'eau
 
 	protected virtual void Awake () {
         Instance = this;

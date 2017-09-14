@@ -25,7 +25,7 @@ public class TerrainHeightMap : TerrainBuilder
     protected virtual void Start() {
         LevelInfo lInfo = LevelInfo.Instance;
         if (lInfo != null)
-            lInfo.Ground = this;
+            lInfo.Ground = this; //ajouter pareil pour le plan d'eau
     }
 
     protected override float ComputeTerrainZDimension(float width)

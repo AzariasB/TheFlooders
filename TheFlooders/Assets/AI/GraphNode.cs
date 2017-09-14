@@ -76,7 +76,7 @@ public class GraphNode {
         debug.layer = LayerMask.NameToLayer("Ignore Raycast");
         debug.transform.position = Position;
         debug.GetComponent<Renderer>().material = Sinked ? redMat : greenMat;
-        Debug.Log(string.Format("x : {0} z : {1}", Position.x, Position.z));
+       // Debug.Log(string.Format("x : {0} z : {1}", Position.x, Position.z));
     }
 
 }

@@ -8,6 +8,7 @@ public class DestroyCity : MonoBehaviour {
 	public AudioSource destructionSound;
 
 //    private bool _isDestroying;
+	public Material city_destroyed;
 
 	// Use this for initialization
 	void Start () {
@@ -50,14 +51,14 @@ public class DestroyCity : MonoBehaviour {
         if(GameObject.Find("cityDestroyText").GetComponent<PowerUsesCounter>().CanDecrement() )
         {
 //            _isDestroying = true;
-            Material ruinMaterial = Resources.Load("RuinMaterial", typeof(Material)) as Material;
+            //Material ruinMaterial = Resources.Load("RuinMaterial", typeof(Material)) as Material;
             PowerUsesCounter.DisableButtons();
 			if (selectionSound != null) {
 				selectionSound.Play();
 			}
             foreach (GameObject city in GameObject.FindGameObjectsWithTag("City"))
             {
-                city.AddComponent<ClickChangeMaterial>().NwMaterial = ruinMaterial;
+				city.AddComponent<ClickChangeMaterial>().NwMaterial = city_destroyed;
             }
         }
 

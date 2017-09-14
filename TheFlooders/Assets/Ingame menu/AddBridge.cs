@@ -8,6 +8,11 @@ public class AddBridge : MonoBehaviour {
 
     private Vector3 bridgeSize = new Vector3((float)0.5, 1, 4);
 
+	public Material Pont{ get; set; }
+	private Material pont = null;
+	[SerializeField]
+	private Material _pont = null;
+
 	// Use this for initialization
 	void Start () {
         Button button = GetComponent<Button>();
@@ -16,6 +21,9 @@ public class AddBridge : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (_pont != pont) {
+			Pont = _pont;
+		}
 		
 	}
 
@@ -30,8 +38,10 @@ public class AddBridge : MonoBehaviour {
             Destroy(nwBrige.GetComponent<Collider>());
 
             //Set material
-            Material bridgeMat = Resources.Load("Pont", typeof(Material)) as Material;
-            nwBrige.GetComponent<Renderer>().material = bridgeMat;
+            //Material bridgeMat = Resources.Load("Pont", typeof(Material)) as Material;
+            //nwBrige.GetComponent<Renderer>().material = bridgeMat;
+
+			nwBrige.GetComponent<Renderer>().material = Pont;
 
             //Change size ...
             nwBrige.transform.localScale = bridgeSize;

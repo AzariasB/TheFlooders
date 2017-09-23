@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System;
+using NUnit.Framework;
 using UnityEngine;
 
 public class TileMap : MonoBehaviour {
@@ -143,7 +144,7 @@ public class TileMap : MonoBehaviour {
 					{
 					    float nwHeight = LevelInfo.Instance.Ground.GetHeight(mNode.Position.x, mNode.Position.z);
 					    mNode.Position.y = nwHeight;
-					    mNode.DebugTrace();
+					    mNode.Cost = Vector3.Distance(mNode.Position, LevelInfo.Instance.Destination);
 					    float height = LevelInfo.Instance.Ground_eau.GetHeight (mNode.Position.x, mNode.Position.z);					    
 					    if (height != 0 && mNode.Position.y <= height)
 					        mNode.Sink ();
@@ -157,32 +158,61 @@ public class TileMap : MonoBehaviour {
 
     public Queue<GraphNode> GetPath(GraphNode from, GraphNode to)
     {
+//        Queue<GraphNode> TraverseOrder = new Queue<GraphNode>();
+//
+//        Queue<GraphNode> Q = new Queue<GraphNode>();
+//        HashSet<GraphNode> S = new HashSet<GraphNode>();
+//
+//        Q.Enqueue(from);
+//        while(Q.Count > 0)
+//        {
+//            GraphNode g = Q.Dequeue();
+//            TraverseOrder.Enqueue(g);
+//
+//            if (g == to)
+//            {
+//                print("Found dest");
+//                return TraverseOrder;
+//            }
+//                
+//
+//            foreach(Edge e in g.Edges)
+//            {
+//                GraphNode gN = e.GetOpposite(g);
+//                if (!S.Contains(gN) && !gN.Sinked)
+//                {
+//                    Q.Enqueue(gN);
+//                    S.Add(gN);
+//                }
+//            }
+//        }
+//
+//        return TraverseOrder;
         Queue<GraphNode> TraverseOrder = new Queue<GraphNode>();
+        HashSet<GraphNode> Seen = new HashSet<GraphNode>();
+        GraphNode current = from;
+        bool foundOtherNode = true;
 
-        Queue<GraphNode> Q = new Queue<GraphNode>();
-        HashSet<GraphNode> S = new HashSet<GraphNode>();
-
-        Q.Enqueue(from);
-        while(Q.Count > 0)
+        while (foundOtherNode)
         {
-            GraphNode g = Q.Dequeue();
-            TraverseOrder.Enqueue(g);
-
-            if (g == to)
+            float minCost = current.Cost;
+            GraphNode bestNeighbour = null;
+            foreach (Edge edge in current.Edges)
             {
-                // print("Found dest");
-                return TraverseOrder;
-            }
-                
-
-            foreach(Edge e in g.Edges)
-            {
-                GraphNode gN = e.GetOpposite(g);
-                if (!S.Contains(gN) && !gN.Sinked)
+                GraphNode gN = edge.GetOpposite(current);
+                if (!Seen.Contains(gN) && !gN.Sinked && gN.Cost < minCost)
                 {
-                    Q.Enqueue(gN);
-                    S.Add(gN);
+                    minCost = gN.Cost;
+                    bestNeighbour = gN;
                 }
+            }
+            foundOtherNode = bestNeighbour != null;
+
+            if (foundOtherNode)
+            {
+                TraverseOrder.Enqueue(bestNeighbour);
+                Seen.Add(bestNeighbour);
+                current = bestNeighbour;
             }
         }
 

@@ -26,10 +26,10 @@ public class AI : MonoBehaviour {
         _finalTarget = tm.GetNodeAtCoords(30, -80);
        // print(string.Format("Arrival at  x : {0} y : {1}", LevelInfo.Instance.Destination.x, LevelInfo.Instance.Destination.y));
 
-        Recaculate();
+        Recalculate();
 
         if (CloseDistance == 0)
-            CloseDistance = 5;
+            CloseDistance = 1;
         
 	}
 	
@@ -37,15 +37,24 @@ public class AI : MonoBehaviour {
     {
         foreach(GraphNode g in _path)
         {
-            g.DebugTrace();
+            g.DebugTrace(true);
         }
     }
 
     void NextTarget()
     {
-        _path.RemoveAt(0);
+        if(_currentTarget != null)
+            _currentTarget.RemoveDebug();
+        
+        if(_path.Count > 0)
+            _path.RemoveAt(0);
+
+            
         if (_path.Count > 0)
+        {
             _currentTarget = _path[0];
+            
+        }
 
         if(_currentTarget == _finalTarget)
         {
@@ -57,14 +66,18 @@ public class AI : MonoBehaviour {
         }
     }
 
-    public void Recaculate()
+    public void FixedUpdate()
+    {
+        Recalculate();
+    }
+    
+    public void Recalculate()
     {
         TileMap tm = GameObject.Find("TileMap").GetComponent<TileMap>();
         GraphNode currentPosition = tm.GetNodeAtCoords(gameObject.transform.position.x, gameObject.transform.position.z);
 
         if (currentPosition != null)
         {
-            //startPosition.DebugTrace();
             _path = tm.GetPath(currentPosition, _finalTarget).ToList<GraphNode>();
             NextTarget();
             DebugPrint();
@@ -81,28 +94,9 @@ public class AI : MonoBehaviour {
     /// <returns></returns>
     private bool IsDying()
     {
-        bool rayCast;
-        RaycastHit hitPoint;
-
         Vector3 mPos = gameObject.transform.position;
-        Vector3 target = new Vector3(mPos.x, 0, mPos.z);
-        Vector3 flatMapPosition = GameObject.Find("FlatMap").gameObject.transform.position;
-        Vector3 origin = new Vector3(target.x, flatMapPosition.y - 5, target.z);
-        Vector3 direction = target - origin;
-
-        Debug.DrawRay(origin, direction);
-
-
-        //Ray ray = Camera.main.ScreenPointToRay(mNode.Position);
-        rayCast = Physics.Raycast(origin, direction, out hitPoint, Mathf.Infinity);
-		if (rayCast)
-			Debug.Log ("AI SINKED"  + hitPoint.collider.gameObject.name);
-
-        if (rayCast && hitPoint.collider.gameObject.name != "Terrain generator")//Can't see it => underwater
-        {
-            return true;
-        }
-        return false;
+        return (LevelInfo.Instance.Ground_eau.GetHeight(mPos.x, mPos.z) >=
+            LevelInfo.Instance.Ground.GetHeight(mPos.x, mPos.z));
     }
 
 	// Update is called once per frame
@@ -130,7 +124,7 @@ public class AI : MonoBehaviour {
                 Vector3 flatPos = new Vector3(mPos.x, 0, mPos.z);
                 Vector3 direction = flatTarget - flatPos;
                 //Divide ... ?
-                GetComponent<Rigidbody>().velocity = direction;
+                GetComponent<Rigidbody>().velocity = direction /  10;
             }
         }
 	}

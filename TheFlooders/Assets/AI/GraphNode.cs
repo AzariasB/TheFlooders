@@ -13,12 +13,19 @@ public class GraphNode {
 
     private GameObject debug;
 
+
+    private float _cost;
+
     /// <summary>
-    /// Weight of this node, the higher, the better
+    /// Weight of this node, the lower, the better
     /// The weight is the relation between the position of 
     /// the node and the destination point of the level
     /// </summary>
-    public float Weight { get; set; }
+    public float Cost
+    {
+        get { return Sinked ? float.PositiveInfinity : _cost; }
+        set { _cost = value; }
+    }
 
 
     public List<Edge> Edges
@@ -72,23 +79,27 @@ public class GraphNode {
         Object.Destroy(debug);
     }
 
-    public void DebugTrace(string name = "")
+
+    public void RemoveDebug()
+    {
+        Object.Destroy(debug);
+    }
+    
+    public void DebugTrace(bool red = false)
     {
         if(this.debug != null)
             Object.Destroy(this.debug);
         
-        Material greenMat = Resources.Load("RedMaterial", typeof(Material)) as Material;
-        Material redMat = Resources.Load("GreenMaterial", typeof(Material)) as Material;
+        Material greenMat = Resources.Load("Green", typeof(Material)) as Material;
+        Material redMat = Resources.Load("Red", typeof(Material)) as Material;
 
         debug = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
-        if(!string.IsNullOrEmpty(name) )
-            debug.name = name;
 
         Object.Destroy(debug.GetComponent<SphereCollider>());
         debug.layer = LayerMask.NameToLayer("Ignore Raycast");
         debug.transform.position = Position;
-        debug.GetComponent<Renderer>().material = Sinked ? redMat : greenMat;
+        debug.GetComponent<Renderer>().material = red ? redMat :  greenMat;
        // Debug.Log(string.Format("x : {0} z : {1}", Position.x, Position.z));
     }
 

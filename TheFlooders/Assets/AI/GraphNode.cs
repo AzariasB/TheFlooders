@@ -13,6 +13,13 @@ public class GraphNode {
 
     private GameObject debug;
 
+    /// <summary>
+    /// Weight of this node, the higher, the better
+    /// The weight is the relation between the position of 
+    /// the node and the destination point of the level
+    /// </summary>
+    public float Weight { get; set; }
+
 
     public List<Edge> Edges
     {

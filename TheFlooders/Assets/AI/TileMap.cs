@@ -146,10 +146,7 @@ public class TileMap : MonoBehaviour {
 					    mNode.DebugTrace();
 					    float height = LevelInfo.Instance.Ground_eau.GetHeight (mNode.Position.x, mNode.Position.z);					    
 					    if (height != 0 && mNode.Position.y <= height)
-					    {
 					        mNode.Sink ();
-                            Debug.Log(string.Format("Node sink {0} vs {1}", nwHeight, height));					        
-					    }
 					}
 				}
 

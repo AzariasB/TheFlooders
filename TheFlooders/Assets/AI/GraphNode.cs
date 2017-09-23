@@ -11,6 +11,8 @@ public class GraphNode {
 
     private List<Edge> _edges;
 
+    private GameObject debug;
+
 
     public List<Edge> Edges
     {
@@ -60,19 +62,23 @@ public class GraphNode {
         {
             _edges[i].BreakEdge();
         }
+        Object.Destroy(debug);
     }
 
     public void DebugTrace(string name = "")
     {
+        if(this.debug != null)
+            Object.Destroy(this.debug);
+        
         Material greenMat = Resources.Load("RedMaterial", typeof(Material)) as Material;
         Material redMat = Resources.Load("GreenMaterial", typeof(Material)) as Material;
 
-        GameObject debug = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        debug = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
         if(!string.IsNullOrEmpty(name) )
             debug.name = name;
 
-        GameObject.Destroy(debug.GetComponent<SphereCollider>());
+        Object.Destroy(debug.GetComponent<SphereCollider>());
         debug.layer = LayerMask.NameToLayer("Ignore Raycast");
         debug.transform.position = Position;
         debug.GetComponent<Renderer>().material = Sinked ? redMat : greenMat;

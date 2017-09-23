@@ -9,10 +9,6 @@ public class TileMap : MonoBehaviour {
 
     private GraphNode[][] _nodes;
 
-    [Tooltip("Générateur de terrain")]
-    public TerrainHeightMap solidTerain;
-
-
     private float _startX;
     private float _startZ;
     private float _stepX;
@@ -25,12 +21,6 @@ public class TileMap : MonoBehaviour {
 
 	void Start(){
 		//Debug print
-		CheckBase();
-	}
-
-
-	// Use this for initialization
-	void Awake () {
         _nodes = new GraphNode[NodeRows][];
         for(int i = 0; i < NodeRows; i++)
         {
@@ -38,8 +28,8 @@ public class TileMap : MonoBehaviour {
         }
 
 
-        _mapWidth = solidTerain.Width;
-        _mapHeight = solidTerain.Height;
+        _mapWidth = LevelInfo.Instance.Ground.Width;
+        _mapHeight = LevelInfo.Instance.Ground.Height;
 
         _stepX = _mapWidth / (NodeColumns);
         _stepZ = _mapHeight / (NodeRows);
@@ -54,7 +44,7 @@ public class TileMap : MonoBehaviour {
             {
                 float zPos = (z * _stepZ) + _startZ;
                 float xPos = (x * _stepX) + _startX;
-                float yPos = (float)solidTerain.GetHeight(xPos, zPos);
+                float yPos = (float)LevelInfo.Instance.Ground.GetHeight(xPos, zPos);
                 Vector3 nodePos = new Vector3(xPos, yPos, zPos);
                 //Check water height
                 _nodes[z][x] = new GraphNode(nodePos);
@@ -72,33 +62,6 @@ public class TileMap : MonoBehaviour {
 			
 	}
 
-    /// <summary>
-    /// Sinks the nodes that already are underwater
-    /// </summary>
-    private void CheckBase()
-    {
-
-        // TODO: Rework
-//        float waterHeight = 0;
-
-
-        //Shows all the nodes
-        for (int z = 0; z < NodeRows; z++)
-        {
-            for(int x = 0; x < NodeColumns; x++)
-            {
-                GraphNode mNode = _nodes[z][x];
-                if (mNode != null)
-                {
-					float waterHeight = LevelInfo.Instance.Ground_eau.GetHeight (mNode.Position.x, mNode.Position.z);
-                    if(mNode.Position.y <= waterHeight)
-                    {
-                        mNode.Sink();
-                    }
-                }
-            }
-        }
-    }
 
     private void GenerateEdge(int x, int z)
     {
@@ -167,39 +130,26 @@ public class TileMap : MonoBehaviour {
 
 
                 GraphNode mNode = _nodes[z][x];
-				if (mNode != null) {
+				if (mNode != null)
+				{
+				    float h =  LevelInfo.Instance.Ground.GetHeight(mNode.Position.x, mNode.Position.z);
 					foreach (Edge e in mNode.Edges) {
 						if (e.IsNode1 (mNode)) {
 							Debug.DrawLine (mNode.Position, e.Node2.Position, Color.green);
 						}
 					}
 
-					if (!mNode.Sinked) {
-						float height = LevelInfo.Instance.Ground_eau.GetHeight (mNode.Position.x, mNode.Position.z);
-						if (mNode.Position.y <= height)
-							mNode.Sink ();
-
-//						bool rayCast;
-//						RaycastHit hitPoint;
-//
-//						Vector3 target = mNode.Position;
-//						Vector3 flatMapPosition = GameObject.Find ("FlatMap").gameObject.transform.position;
-//						Vector3 origin = new Vector3 (target.x, flatMapPosition.y - 5, target.z);
-//						Vector3 direction = target - origin;
-//
-//						Debug.DrawRay (origin, direction);
-//
-//						//Ray ray = Camera.main.ScreenPointToRay(mNode.Position);
-//						rayCast = Physics.Raycast (origin, direction, out hitPoint, Mathf.Infinity);
-//
-//
-//						if (rayCast)
-//							Debug.Log ("GraphNode" +   hitPoint.collider.gameObject.name);
-//						if (rayCast && hitPoint.collider.gameObject.name != "HeightMap") {//Can't see it => underwater
-//							//Debug.DrawLine(origin, hitPoint.collider.gameObject.transform.position, Color.red);
-//							mNode.Sink ();
-//						}
-
+					if (!mNode.Sinked)
+					{
+					    float nwHeight = LevelInfo.Instance.Ground.GetHeight(mNode.Position.x, mNode.Position.z);
+					    mNode.Position.y = nwHeight;
+					    mNode.DebugTrace();
+					    float height = LevelInfo.Instance.Ground_eau.GetHeight (mNode.Position.x, mNode.Position.z);					    
+					    if (height != 0 && mNode.Position.y <= height)
+					    {
+					        mNode.Sink ();
+                            Debug.Log(string.Format("Node sink {0} vs {1}", nwHeight, height));					        
+					    }
 					}
 				}
 

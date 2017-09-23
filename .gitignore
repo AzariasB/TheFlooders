@@ -9,3 +9,8 @@ Temp/
 *.pidb
 TheFlooders/obj/Debug/
 !**/RAIN/**/*.dll
+old/
+
+a_lib/
+
+TheFlooders/TheFlooders/\.idea/\.idea\.TheFlooders/

@@ -228,6 +228,7 @@ GameObject:
   - component: {fileID: 50092607}
   - component: {fileID: 50092606}
   - component: {fileID: 50092605}
+  - component: {fileID: 50092610}
   m_Layer: 5
   m_Name: bridge_button
   m_TagString: ModifierButton
@@ -426,6 +427,25 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 50092603}
+--- !u!114 &50092610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 50092603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!1 &208367867
 GameObject:
   m_ObjectHideFlags: 0
@@ -1016,6 +1036,7 @@ GameObject:
   - component: {fileID: 632944819}
   - component: {fileID: 632944818}
   - component: {fileID: 632944817}
+  - component: {fileID: 632944822}
   m_Layer: 5
   m_Name: Remove_mountain
   m_TagString: ModifierButton
@@ -1059,6 +1080,7 @@ MonoBehaviour:
   usesCounter: {fileID: 1463600584}
   placerPrefab: {fileID: 114135893618845004, guid: f04db37d5efebac4bb0017328dbe88c0,
     type: 2}
+  aide: "Abaisse le terrain dans une zone donn\xE9e"
 --- !u!82 &632944818
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1217,6 +1239,53 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 632944815}
+--- !u!114 &632944822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 632944815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 632944817}
+          m_MethodName: bouton_afficher_texte
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1973672139}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 632944817}
+          m_MethodName: bouton_cacher_texte
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1973672139}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!1001 &668497711
 Prefab:
   m_ObjectHideFlags: 0
@@ -1682,6 +1751,7 @@ RectTransform:
   - {fileID: 2054773874}
   - {fileID: 1297265983}
   - {fileID: 1820574450}
+  - {fileID: 1973672138}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2044,7 +2114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartTime: 0
-  CloseDistance: 0
+  CloseDistance: 100
 --- !u!54 &1025867828
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2551,6 +2621,7 @@ GameObject:
   - component: {fileID: 1234741823}
   - component: {fileID: 1234741822}
   - component: {fileID: 1234741821}
+  - component: {fileID: 1234741824}
   - component: {fileID: 1234741820}
   - component: {fileID: 1234741819}
   m_Layer: 5
@@ -2596,6 +2667,7 @@ MonoBehaviour:
   usesCounter: {fileID: 792696341}
   placerPrefab: {fileID: 114637511426770210, guid: 02131607c4ec34da4ab56c51d6613553,
     type: 2}
+  aide: "El\xE8ve le terrain dans une zone donn\xE9e pour cr\xE9er une montagne"
 --- !u!82 &1234741820
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2754,6 +2826,53 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1234741817}
+--- !u!114 &1234741824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1234741817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1234741819}
+          m_MethodName: bouton_afficher_texte
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1973672139}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1234741819}
+          m_MethodName: bouton_cacher_texte
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1973672139}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!1 &1271943780
 GameObject:
   m_ObjectHideFlags: 0
@@ -2801,6 +2920,7 @@ GameObject:
   - component: {fileID: 1297265986}
   - component: {fileID: 1297265985}
   - component: {fileID: 1297265984}
+  - component: {fileID: 1297265989}
   m_Layer: 5
   m_Name: Clay_button
   m_TagString: ModifierButton
@@ -2844,6 +2964,7 @@ MonoBehaviour:
   usesCounter: {fileID: 511920783}
   placerPrefab: {fileID: 114577932637187724, guid: c35a5851a497db943b439f98cb555fe7,
     type: 2}
+  aide: "Ajoute de l'argile, qui ralentit l'avanc\xE9e de l'eau"
 --- !u!82 &1297265985
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2867,7 +2988,7 @@ AudioSource:
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -2875,20 +2996,14 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
-      time: 0
+      time: 0.002
       value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -500.20065
+      outSlope: -500.20065
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   panLevelCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -3002,6 +3117,53 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1297265982}
+--- !u!114 &1297265989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1297265982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1297265984}
+          m_MethodName: bouton_afficher_texte
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1973672139}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1297265984}
+          m_MethodName: bouton_cacher_texte
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1973672139}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!1 &1376882115
 GameObject:
   m_ObjectHideFlags: 0
@@ -3662,6 +3824,7 @@ GameObject:
   - component: {fileID: 1820574453}
   - component: {fileID: 1820574452}
   - component: {fileID: 1820574451}
+  - component: {fileID: 1820574456}
   m_Layer: 5
   m_Name: Silt_button
   m_TagString: ModifierButton
@@ -3705,6 +3868,7 @@ MonoBehaviour:
   usesCounter: {fileID: 1591167371}
   placerPrefab: {fileID: 114214954986212868, guid: b8686addcc14cd448ab35f815b6839a9,
     type: 2}
+  aide: "Ajoute du limon, qui acc\xE9l\xE8re l'avanc\xE9e de l'eau"
 --- !u!82 &1820574452
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3863,6 +4027,127 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1820574449}
+--- !u!114 &1820574456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1820574449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1820574451}
+          m_MethodName: bouton_afficher_texte
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1973672139}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1820574451}
+          m_MethodName: bouton_cacher_texte
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1973672139}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
+--- !u!1 &1973672137
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1973672138}
+  - component: {fileID: 1973672140}
+  - component: {fileID: 1973672139}
+  m_Layer: 5
+  m_Name: Power_description
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1973672138
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1973672137}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 838524195}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 365, y: 156.5}
+  m_SizeDelta: {x: 330, y: 313}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1973672139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1973672137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 26
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 2
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &1973672140
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1973672137}
 --- !u!1 &1988810557
 GameObject:
   m_ObjectHideFlags: 0
@@ -4386,7 +4671,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0259d43aef516cc4b8162de3fa9d726d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solidTerain: {fileID: 1773792169}
   NodeRows: 20
   NodeColumns: 10
 --- !u!4 &2119236154

@@ -14,6 +14,9 @@ public class PowerButtonListener : MonoBehaviour {
     [Tooltip("Script qui s'occupe de viser le pouvoir sur le terrain et de le valider")]
     public PowerPlacer placerPrefab;
 
+	[Tooltip("Message qui s'affiche lorsque l'utilisateur passe le curseur sur le bouton")]
+	public string aide;
+
     protected virtual void Start () {
         if (button == null)
             button = GetComponent<Button>();
@@ -37,5 +40,17 @@ public class PowerButtonListener : MonoBehaviour {
             }
         }
     }
+
+	//Scripts qui affichent la description du pouvoir lorsque la souris passe sur le bouton
+
+	public void bouton_afficher_texte(Text description)
+	{
+		description.text = aide;
+	}
+
+	public void bouton_cacher_texte(Text description)
+	{
+		description.text = "";
+	}
 
 }

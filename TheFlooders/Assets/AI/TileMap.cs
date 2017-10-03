@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System;
-using NUnit.Framework;
 using UnityEngine;
 
 public class TileMap : MonoBehaviour {
@@ -133,7 +132,7 @@ public class TileMap : MonoBehaviour {
                 GraphNode mNode = _nodes[z][x];
 				if (mNode != null)
 				{
-				    float h =  LevelInfo.Instance.Ground.GetHeight(mNode.Position.x, mNode.Position.z);
+				    // float h =  LevelInfo.Instance.Ground.GetHeight(mNode.Position.x, mNode.Position.z);
 					foreach (Edge e in mNode.Edges) {
 						if (e.IsNode1 (mNode)) {
 							Debug.DrawLine (mNode.Position, e.Node2.Position, Color.green);
